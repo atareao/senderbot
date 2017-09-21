@@ -1,0 +1,11 @@
+[Unit]
+Description=Message for stop
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+ExecStart=/bin/true
+ExecStop=/usr/bin/python3 /usr/bin/senderbot -m "Parando"
+
+[Install]
+WantedBy=multi-user.target

@@ -1,4 +1,6 @@
 src/senderbot /usr/bin
+data/message_start.service /etc/systemd/system
+data/message_stop.service /etc/systemd/system
 python-telegram-bot/telegram/*.py /usr/share/senderbot/telegram
 python-telegram-bot/telegram/ext/*.py /usr/share/senderbot/telegram/ext
 python-telegram-bot/telegram/utils/*.py /usr/share/senderbot/telegram/utils

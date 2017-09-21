@@ -1,0 +1,10 @@
+[Unit]
+Description=Message for start
+
+[Service]
+Type=oneshot
+RemainAfterExit=false
+ExecStart=/usr/bin/python3 /usr/bin/senderbot -m "Iniciando"
+
+[Install]
+WantedBy=multi-user.target
