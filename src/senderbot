@@ -1,0 +1,164 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#
+# sender.py
+#
+# This file is part of ---
+#
+# Copyright (C) 2017
+# Lorenzo Carbonell Cerezo <lorenzo.carbonell.cerezo@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+from optparse import OptionParser
+from pprint import pprint
+import codecs
+import os
+import sys
+import json
+try:
+    from telegram import Bot, ParseMode
+except Exception as e:
+    sys.path.insert(1, '/usr/share/senderbot/')
+    from telegram import Bot, ParseMode
+
+
+APP = 'senderbot'
+APPNAME = 'SenderBot'
+APPCONF = APP + '.conf'
+CONFIG_DIR = os.path.join(os.path.expanduser('~'), '.config')
+CONFIG_APP_DIR = os.path.join(CONFIG_DIR, APP)
+CONFIG_FILE = os.path.join(CONFIG_APP_DIR, APPCONF)
+PARAMS = {'token': None,
+          'channel_id': None}
+
+if not os.path.exists(CONFIG_APP_DIR):
+    os.makedirs(CONFIG_APP_DIR)
+
+
+class Configuration(object):
+    def __init__(self):
+        self.params = PARAMS
+        self.read()
+
+    def get(self, key):
+        try:
+            return self.params[key]
+        except KeyError as e:
+            print(e)
+            self.params[key] = PARAMS[key]
+            return self.params[key]
+
+    def set(self, key, value):
+        self.params[key] = value
+
+    def reset(self):
+        if os.path.exists(CONFIG_FILE):
+            os.remove(CONFIG_FILE)
+        self.params = PARAMS
+        self.save()
+
+    def set_defaults(self):
+        self.params = PARAMS
+        self.save()
+
+    def print_config(self):
+        pprint(self.params)
+
+    def read(self):
+        try:
+            f = codecs.open(CONFIG_FILE, 'r', 'utf-8')
+        except IOError as e:
+            print(e)
+            self.save()
+            f = codecs.open(CONFIG_FILE, 'r', 'utf-8')
+        try:
+            self.params = json.loads(f.read())
+        except ValueError as e:
+            print(e)
+            self.save()
+        f.close()
+
+    def save(self):
+        f = codecs.open(CONFIG_FILE, 'w', 'utf-8')
+        f.write(json.dumps(self.params))
+        f.close()
+
+
+class SenderBot(Bot):
+    def __init__(self, token=None, channel_id=None):
+        if token is None or channel_id is None:
+            configuration = Configuration()
+            token = configuration.get('token')
+            channel_id = configuration.get('channel_id')
+        Bot.__init__(self, token)
+        self.channel_id = channel_id
+
+    def send_message(self, text):
+        super(SenderBot, self).send_message(chat_id=self.channel_id,
+                                            text=text,
+                                            parse_mode=ParseMode.HTML)
+
+
+def set_channel_id(channel_id):
+    configuration = Configuration()
+    configuration.set('channel_id', channel_id)
+    configuration.save()
+
+
+def set_token(token):
+    configuration = Configuration()
+    configuration.set('token', token)
+    configuration.save()
+
+
+def print_config():
+    configuration = Configuration()
+    configuration.print_config()
+
+
+def send_message(message):
+    cab = SenderBot()
+    cab.send_message(message)
+
+
+if __name__ == '__main__':
+    usage = "usage: %prog [options] arg"
+    parser = OptionParser(usage=usage)
+    parser.add_option('-c', '--set-channel-id', dest='channel_id',
+                      metavar='CHANNEL_ID',
+                      help='set channel id where bot will send messages')
+    parser.add_option('-m', '--message', dest='message',
+                      metavar='MESSAGE',
+                      help='send a message to the channel')
+    parser.add_option('-p', '--print-config',
+                      action="store_true", dest="print_config", default=False,
+                      help='Print configuration')
+    parser.add_option('-t', '--set-token', dest='token',
+                      metavar='TOKEN',
+                      help='set the TOKEN of the bot')
+
+    (options, args) = parser.parse_args()
+    # Add Feed
+    if options.channel_id is not None:
+        set_channel_id(options.channel_id)
+    # Sen message
+    if options.message is not None:
+        send_message(options.message)
+    # Print
+    if options.print_config is True:
+        print_config()
+    # Set Token
+    if options.token is not None:
+        set_token(options.token)

@@ -1,0 +1,15 @@
+Source: senderbot
+Section: utils
+Priority: extra
+Maintainer: Lorenzo Carbonell Cerezo <lorenzo.carbonell.cerezo@gmail.com>
+Build-Depends: debhelper (>= 9)
+Standards-Version: 3.9.5
+Homepage: http://www.atareao.es
+
+Package: senderbot
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends},
+	python3,
+	python3-requests
+Description: A bot to sender messages to Channel o Group
+ SenderBot is a Telegram Bot that sends messages to Channel o Group
