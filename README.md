@@ -13,6 +13,8 @@ Required dependencies:
 ```
     python3,
     python3-requests
+    python3-future
+    python3-certifi
 ```
 # Install
 
