@@ -28,10 +28,10 @@ import os
 import sys
 import json
 try:
-    from telegram import Bot, ParseMode
+    from telegram import Bot, ParseMode, File
 except Exception as e:
     sys.path.insert(1, '/usr/share/senderbot/')
-    from telegram import Bot, ParseMode
+    from telegram import Bot, ParseMode, File
 
 
 APP = 'senderbot'
@@ -110,6 +110,36 @@ class SenderBot(Bot):
                                             text=text,
                                             parse_mode=ParseMode.HTML)
 
+    def send_image(self, file_image):
+        if os.path.exists(file_image):
+            super(SenderBot, self).sendPhoto(chat_id=self.channel_id,
+                                             photo=open(file_image, 'rb'))
+
+    def send_audio(self, file_audio):
+        if os.path.exists(file_audio):
+            extension = os.path.splitext(file_audio)[1][1:].strip().lower()
+            if extension == 'ogg':
+                super(SenderBot, self).sendVoice(chat_id=self.channel_id,
+                                                 voice=open(file_audio, 'rb'))
+            elif extension == 'mp3':
+                super(SenderBot, self).sendAudio(chat_id=self.channel_id,
+                                                 audio=open(file_audio, 'rb'))
+
+    def send_document(self, file_document):
+        if os.path.exists(file_document):
+            super(SenderBot, self).sendDocument(chat_id=self.channel_id,
+                                                document=open(file_document,
+                                                              'rb'),
+                                                timeout=999)
+
+    def get_images(self):
+        updates = super(SenderBot, self).get_updates()
+        for index, update in enumerate(updates):
+            if update.message.photo:
+                file_id = update.message.photo[-1].file_id
+                afile = self.get_file(file_id)
+                afile.download()
+
 
 def set_channel_id(channel_id):
     configuration = Configuration()
@@ -128,37 +158,77 @@ def print_config():
     configuration.print_config()
 
 
+def get_images():
+    cab = SenderBot()
+    cab.get_images()
+
+
 def send_message(message):
     cab = SenderBot()
     cab.send_message(message)
 
 
+def send_image(image_file):
+    cab = SenderBot()
+    cab.send_image(image_file)
+
+
+def send_audio(audio_file):
+    cab = SenderBot()
+    cab.send_audio(audio_file)
+
+
+def send_document(document_file):
+    cab = SenderBot()
+    cab.send_document(document_file)
+
+
 if __name__ == '__main__':
     usage = "usage: %prog [options] arg"
     parser = OptionParser(usage=usage)
+    parser.add_option('-a', '--audio_file', dest='audio_file',
+                      help='send an audio to the channel')
     parser.add_option('-c', '--set-channel-id', dest='channel_id',
                       metavar='CHANNEL_ID',
                       help='set channel id where bot will send messages')
+    parser.add_option('-d', '--document_file', dest='document_file',
+                      help='send a document to the channel')
+    parser.add_option('-g', '--get-images',
+                      action='store_true', dest='get_images', default=False,
+                      help='get all images from chat_id')
+    parser.add_option('-i', '--image_file', dest='image_file',
+                      help='send a image to the channel')
     parser.add_option('-m', '--message', dest='message',
-                      metavar='MESSAGE',
                       help='send a message to the channel')
     parser.add_option('-p', '--print-config',
-                      action="store_true", dest="print_config", default=False,
+                      action='store_true', dest='print_config', default=False,
                       help='Print configuration')
     parser.add_option('-t', '--set-token', dest='token',
                       metavar='TOKEN',
                       help='set the TOKEN of the bot')
 
     (options, args) = parser.parse_args()
-    # Add Feed
+    # Send audio file
+    if options.audio_file is not None:
+        send_audio(options.audio_file)
+    # Set channel id
     if options.channel_id is not None:
         set_channel_id(options.channel_id)
-    # Sen message
+    # Send document file
+    if options.document_file is not None:
+        send_document(options.document_file)
+    # Send message
     if options.message is not None:
         send_message(options.message)
+    # Send image
+    if options.image_file is not None:
+        send_image(options.image_file)
     # Print
     if options.print_config is True:
         print_config()
+    # Get Images
+    if options.get_images is True:
+        get_images()
     # Set Token
     if options.token is not None:
         set_token(options.token)
