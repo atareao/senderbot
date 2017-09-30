@@ -376,8 +376,8 @@ def only():
             bio.name = 'image.png'
             img.save(bio, 'PNG')
             bio.seek(0)
-            bot.send_phot(chat_id=update.message.chat_id,
-                          photo=bio)
+            bot.send_photo(chat_id=update.message.chat_id,
+                           photo=bio)
 
         start_handler = CommandHandler('start', start)
         dispatcher.add_handler(start_handler)
