@@ -257,8 +257,10 @@ def only():
                 salida = run_command('systemctl status mariadb')
                 if salida is not None:
                     if salida.find('running') > -1:
-                        bot.send_message(chat_id=update.message.chat_id,
-                                         text="MariaDB está funcionando!")
+                        bot.edit_message_text(
+                            chat_id=query.message.chat_id,
+                            message_id=query.message.message_id,
+                            text="MariaDB está funcionando!")
                         return
                     elif salida.find('dead') > -1:
                         bot.send_message(chat_id=update.message.chat_id,
