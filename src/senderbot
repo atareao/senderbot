@@ -247,12 +247,12 @@ def only():
 
             reply_markup = InlineKeyboardMarkup(keyboard)
 
-            update.message.reply_text('Please choose:',
+            update.message.reply_text('Selecciona un servicio:',
                                       reply_markup=reply_markup)
 
         def button(bot, update):
             query = update.callback_query
-            if query.data == 1:
+            if query.data == '1':
                 salida = run_command('systemctl status mariadb')
                 if salida is not None:
                     if salida.find('running') > -1:
@@ -265,7 +265,7 @@ def only():
                         return
                 bot.send_message(chat_id=update.message.chat_id,
                                  text="Algo no va bien!! MariaDB está parado!")
-            elif query.data == 2:
+            elif query.data == '2':
                 salida = run_command('systemctl status apache2')
                 if salida is not None:
                     if salida.find('running') > -1:
@@ -278,7 +278,7 @@ def only():
                         return
                 bot.send_message(chat_id=update.message.chat_id,
                                  text="Algo no va bien!!! Apache está parado!")
-            elif query.data == 3:
+            elif query.data == '3':
                 salida = run_command('systemctl status openvpn')
                 if salida is not None:
                     if salida.find('Active: active') > -1:
