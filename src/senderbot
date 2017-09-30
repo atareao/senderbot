@@ -266,6 +266,20 @@ def only():
             bot.send_message(chat_id=update.message.chat_id,
                              text="Algo no va bien!!! Apache está parado!")
 
+        def vpn(bot, update):
+            salida = run_command('systemctl status openvpn')
+            if salida is not None:
+                if salida.find('running') > -1:
+                    bot.send_message(chat_id=update.message.chat_id,
+                                     text="El VPN está funcionando!")
+                    return
+                elif salida.find('dead') > -1:
+                    bot.send_message(chat_id=update.message.chat_id,
+                                     text="El VPN está parado!")
+                    return
+            bot.send_message(chat_id=update.message.chat_id,
+                             text="Algo no va bien!!! El VPN está parado!")
+
         def caps(bot, update, args):
             text_caps = ' '.join(args).upper()
             bot.send_message(chat_id=update.message.chat_id, text=text_caps)
@@ -297,6 +311,9 @@ def only():
 
         apache_handler = CommandHandler('apache', apache)
         dispatcher.add_handler(apache_handler)
+
+        vpn_handler = CommandHandler('vpn', vpn)
+        dispatcher.add_handler(vpn_handler)
 
         caps_handler = CommandHandler('caps', caps, pass_args=True)
         dispatcher.add_handler(caps_handler)
