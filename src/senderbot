@@ -23,6 +23,9 @@
 
 from optparse import OptionParser
 from pprint import pprint
+from PIL import Image
+import requests
+from io import BytesIO
 import logging
 import codecs
 import os
@@ -359,6 +362,18 @@ def only():
                              text="Parando el bot")
             updater.stop()
 
+        def grises(bot, update):
+            photo_file = bot.get_file(update.message.photo[-1].file_id)
+            response = requests.get(photo_file)
+            img = Image.open(BytesIO(response.content))
+            img = img.convert('LA')
+            bio = BytesIO()
+            bio.name = 'image.jpeg'
+            img.save(bio, 'JPEG')
+            bio.seek(0)
+            bot.send_phot(chat_id=update.message.chat_id,
+                          photo=bio)
+
         start_handler = CommandHandler('start', start)
         dispatcher.add_handler(start_handler)
 
@@ -389,6 +404,9 @@ def only():
 
         echo_handler = MessageHandler(Filters.text, echo)
         dispatcher.add_handler(echo_handler)
+
+        grises_handler = MessageHandler(Filters.photo, grises)
+        dispatcher.add_handler(grises_handler)
 
         dispatcher.add_error_handler(error)
 
