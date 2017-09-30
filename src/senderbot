@@ -216,13 +216,6 @@ def only():
             bot.send_message(chat_id=update.message.chat_id,
                              text="¿Si?, mi amo!")
 
-        def donde(bot, update):
-            user_location = update.message.location
-            message = 'Tus coordenadas son: latitud={0} y longitud={1}'.format(
-                user_location.latitude, user_location.longitude)
-            bot.send_message(chat_id=update.message.chat_id,
-                             text=message)
-
         def temp(bot, update):
             data = open('/sys/class/thermal/thermal_zone0/temp', 'r')
             temperatura = data.read()
@@ -293,9 +286,6 @@ def only():
         start_handler = CommandHandler('start', start)
         dispatcher.add_handler(start_handler)
 
-        donde_handler = CommandHandler('donde', donde)
-        dispatcher.add_handler(donde_handler)
-
         temp_handler = CommandHandler('temp', temp)
         dispatcher.add_handler(temp_handler)
 
@@ -320,7 +310,13 @@ def only():
         unknown_handler = MessageHandler(Filters.command, unknown)
         dispatcher.add_handler(unknown_handler)
 
+        # Start the Bot
         updater.start_polling()
+
+        # Run the bot until you press Ctrl-C or the process receives SIGINT,
+        # SIGTERM or SIGABRT. This should be used most of the time, since
+        # start_polling() is non-blocking and will stop the bot gracefully.
+        updater.idle()
 
 
 if __name__ == '__main__':
