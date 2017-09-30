@@ -30,13 +30,13 @@ import json
 import subprocess
 import shlex
 try:
-    from telegram import Bot, ParseMode
+    from telegram import Bot, ParseMode, KeyboardButton, ReplyKeyboardMarkup
     from telegram.ext import Updater
     from telegram.ext import CommandHandler
     from telegram.ext import MessageHandler, Filters
 except Exception as e:
     sys.path.insert(1, '/usr/share/senderbot/')
-    from telegram import Bot, ParseMode
+    from telegram import Bot, ParseMode, KeyboardButton, ReplyKeyboardMarkup
     from telegram.ext import Updater
     from telegram.ext import CommandHandler
     from telegram.ext import MessageHandler, Filters
@@ -238,6 +238,18 @@ def only():
             bot.send_message(chat_id=update.message.chat_id,
                              text="Algo no va bien!!! Samba está parado!")
 
+        def info(bot, update):
+            location_keyboard = KeyboardButton(text="send_location",
+                                               request_location=True)
+            contact_keyboard = KeyboardButton(text="send_contact",
+                                              request_contact=True)
+            custom_keyboard = [[location_keyboard, contact_keyboard]]
+            reply_markup = ReplyKeyboardMarkup(custom_keyboard)
+            bot.send_Message(chat_id=update.message.chat_id,
+                             text="Would you mind sharing your location and \
+contact with me?",
+                             reply_markup=reply_markup)
+
         def mariadb(bot, update):
             salida = run_command('systemctl status mariadb')
             if salida is not None:
@@ -299,6 +311,9 @@ def only():
 
         start_handler = CommandHandler('start', start)
         dispatcher.add_handler(start_handler)
+
+        info_handler = CommandHandler('info', info)
+        dispatcher.add_handler(info_handler)
 
         temp_handler = CommandHandler('temp', temp)
         dispatcher.add_handler(temp_handler)
