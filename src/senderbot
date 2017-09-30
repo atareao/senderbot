@@ -269,7 +269,7 @@ def only():
         def vpn(bot, update):
             salida = run_command('systemctl status openvpn')
             if salida is not None:
-                if salida.find('running') > -1:
+                if salida.find('Active: active') > -1:
                     bot.send_message(chat_id=update.message.chat_id,
                                      text="El VPN está funcionando!")
                     return
