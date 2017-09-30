@@ -28,10 +28,16 @@ import os
 import sys
 import json
 try:
-    from telegram import Bot, ParseMode, File
+    from telegram import Bot, ParseMode
+    from telegram.ext import Updater
+    from telegram.ext import CommandHandler
+    from telegram.ext import MessageHandler, Filters
 except Exception as e:
     sys.path.insert(1, '/usr/share/senderbot/')
-    from telegram import Bot, ParseMode, File
+    from telegram import Bot, ParseMode
+    from telegram.ext import Updater
+    from telegram.ext import CommandHandler
+    from telegram.ext import MessageHandler, Filters
 
 
 APP = 'senderbot'
@@ -183,6 +189,63 @@ def send_document(document_file):
     cab.send_document(document_file)
 
 
+def only():
+    configuration = Configuration()
+    token = configuration.get('token')
+    if token is not None and len(token) > 0:
+        updater = Updater(token=token)
+        dispatcher = updater.dispatcher
+
+        def start(bot, update):
+            bot.send_message(chat_id=update.message.chat_id,
+                             text="I'm a bot, please talk to me!")
+
+        def temp(bot, update):
+            data = open('/sys/class/thermal/thermal_zone0/temp', 'r')
+            temperatura = data.read()
+            data.close()
+            temperatura = temperatura[:-1]
+            temperatura = str(float(temperatura)/1000.0) + ' ºC'
+            bot.send_message(chat_id=update.message.chat_id, text=temperatura)
+
+        def caps(bot, update, args):
+            text_caps = ' '.join(args).upper()
+            bot.send_message(chat_id=update.message.chat_id, text=text_caps)
+
+        def echo(bot, update):
+            bot.send_message(chat_id=update.message.chat_id,
+                             text=update.message.text)
+
+        def unknown(bot, update):
+            bot.send_message(chat_id=update.message.chat_id,
+                             text="Lo siento, no entiendo esa orden.")
+
+        def stop(bot, update):
+            bot.send_message(chat_id=update.message.chat_id,
+                             text="Parando el bot")
+            updater.stop()
+
+        start_handler = CommandHandler('start', start)
+        dispatcher.add_handler(start_handler)
+
+        temp_handler = CommandHandler('temp', temp)
+        dispatcher.add_handler(temp_handler)
+
+        caps_handler = CommandHandler('caps', caps, pass_args=True)
+        dispatcher.add_handler(caps_handler)
+
+        stop_handler = CommandHandler('stop', stop)
+        dispatcher.add_handler(stop_handler)
+
+        echo_handler = MessageHandler(Filters.text, echo)
+        dispatcher.add_handler(echo_handler)
+
+        unknown_handler = MessageHandler(Filters.command, unknown)
+        dispatcher.add_handler(unknown_handler)
+
+        updater.start_polling()
+
+
 if __name__ == '__main__':
     usage = "usage: %prog [options] arg"
     parser = OptionParser(usage=usage)
@@ -200,6 +263,9 @@ if __name__ == '__main__':
                       help='send a image to the channel')
     parser.add_option('-m', '--message', dest='message',
                       help='send a message to the channel')
+    parser.add_option('-o', '--work alone',
+                      action='store_true', dest='only', default=False,
+                      help='Allow bot work alone')
     parser.add_option('-p', '--print-config',
                       action='store_true', dest='print_config', default=False,
                       help='Print configuration')
@@ -229,6 +295,9 @@ if __name__ == '__main__':
     # Get Images
     if options.get_images is True:
         get_images()
+    # Work Alone
+    if options.only is True:
+        only()
     # Set Token
     if options.token is not None:
         set_token(options.token)
