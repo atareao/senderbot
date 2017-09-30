@@ -30,13 +30,15 @@ import json
 import subprocess
 import shlex
 try:
-    from telegram import Bot, ParseMode, KeyboardButton, ReplyKeyboardMarkup
+    from telegram import Bot, ParseMode
+    from telegram import InlineKeyboardButton, InlineKeyboardMarkup
     from telegram.ext import Updater
     from telegram.ext import CommandHandler
     from telegram.ext import MessageHandler, Filters
 except Exception as e:
     sys.path.insert(1, '/usr/share/senderbot/')
-    from telegram import Bot, ParseMode, KeyboardButton, ReplyKeyboardMarkup
+    from telegram import Bot, ParseMode
+    from telegram import InlineKeyboardButton, InlineKeyboardMarkup
     from telegram.ext import Updater
     from telegram.ext import CommandHandler
     from telegram.ext import MessageHandler, Filters
@@ -239,16 +241,15 @@ def only():
                              text="Algo no va bien!!! Samba está parado!")
 
         def info(bot, update):
-            location_keyboard = KeyboardButton(text="send_location",
-                                               request_location=True)
-            contact_keyboard = KeyboardButton(text="send_contact",
-                                              request_contact=True)
-            custom_keyboard = [[location_keyboard, contact_keyboard]]
-            reply_markup = ReplyKeyboardMarkup(custom_keyboard)
-            bot.send_Message(chat_id=update.message.chat_id,
-                             text="Would you mind sharing your location and \
-contact with me?",
-                             reply_markup=reply_markup)
+            keyboard = [[InlineKeyboardButton("Option 1", callback_data='1'),
+                         InlineKeyboardButton("Option 2", callback_data='2')],
+
+                        [InlineKeyboardButton("Option 3", callback_data='3')]]
+
+            reply_markup = InlineKeyboardMarkup(keyboard)
+
+            update.message.reply_text('Please choose:',
+                                      reply_markup=reply_markup)
 
         def mariadb(bot, update):
             salida = run_command('systemctl status mariadb')
