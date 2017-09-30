@@ -227,12 +227,16 @@ def only():
         def samba(bot, update):
             salida = run_command('systemctl status smbd')
             if salida is not None:
-                if salida.find('running'):
+                if salida.find('running') > -1:
                     bot.send_message(chat_id=update.message.chat_id,
                                      text="Samba está funcionando!")
-                elif salida.find('dead'):
+                    return
+                elif salida.find('dead') > -1:
                     bot.send_message(chat_id=update.message.chat_id,
                                      text="Samba está parado!")
+                    return
+            bot.send_message(chat_id=update.message.chat_id,
+                             text="Algo no va bien!!! Samba está parado!")
 
         def caps(bot, update, args):
             text_caps = ' '.join(args).upper()
