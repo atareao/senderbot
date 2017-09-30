@@ -369,7 +369,7 @@ def only():
 
         def grises(bot, update):
             photo_file = bot.get_file(update.message.photo[-1].file_id)
-            response = requests.get(photo_file)
+            response = requests.get(photo_file['file_path'])
             img = Image.open(BytesIO(response.content))
             img = img.convert('LA')
             bio = BytesIO()
