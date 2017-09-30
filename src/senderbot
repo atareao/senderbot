@@ -27,6 +27,8 @@ import codecs
 import os
 import sys
 import json
+import subprocess
+import shlex
 try:
     from telegram import Bot, ParseMode
     from telegram.ext import Updater
@@ -51,6 +53,20 @@ PARAMS = {'token': None,
 
 if not os.path.exists(CONFIG_APP_DIR):
     os.makedirs(CONFIG_APP_DIR)
+
+
+def run_command(command):
+    command = shlex.split(command)
+    result = subprocess.run(command,
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE)
+    output = result.stdout.decode()
+    error = result.stderr.decode()
+    if len(output) > 0:
+        return output
+    if len(error) > 0:
+        return 'Error: %s' % error
+    return None
 
 
 class Configuration(object):
@@ -205,8 +221,18 @@ def only():
             temperatura = data.read()
             data.close()
             temperatura = temperatura[:-1]
-            temperatura = str(float(temperatura)/1000.0) + ' ºC'
+            temperatura = str(float(temperatura) / 1000.0) + ' ºC'
             bot.send_message(chat_id=update.message.chat_id, text=temperatura)
+
+        def samba(bot, update):
+            salida = run_command('systemctl status smbd')
+            if salida is not None:
+                if salida.find('running'):
+                    bot.send_message(chat_id=update.message.chat_id,
+                                     text="Samba está funcionando!")
+                elif salida.find('dead'):
+                    bot.send_message(chat_id=update.message.chat_id,
+                                     text="Samba está parado!")
 
         def caps(bot, update, args):
             text_caps = ' '.join(args).upper()
@@ -230,6 +256,9 @@ def only():
 
         temp_handler = CommandHandler('temp', temp)
         dispatcher.add_handler(temp_handler)
+
+        samba_handler = CommandHandler('samba', samba)
+        dispatcher.add_handler(samba_handler)
 
         caps_handler = CommandHandler('caps', caps, pass_args=True)
         dispatcher.add_handler(caps_handler)
