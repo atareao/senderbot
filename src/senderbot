@@ -48,6 +48,11 @@ except Exception as e:
     from telegram.ext import MessageHandler, Filters
 
 
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - \
+%(message)s',
+                    level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 APP = 'senderbot'
 APPNAME = 'SenderBot'
 APPCONF = APP + '.conf'
@@ -256,7 +261,7 @@ def only():
 
         def button(bot, update):
             query = update.callback_query
-            logging.warning('TELEGRAM query data: "%s" type: "%s"' % (
+            logger.warning('TELEGRAM query data: "%s" type: "%s"' % (
                 str(query.data), str(type(query.data))))
             if query.data == '1':
                 salida = run_command('systemctl status mariadb')
@@ -355,7 +360,7 @@ def only():
                              text="Lo siento, no entiendo esa orden.")
 
         def error(bot, update, error):
-            logging.warning('Update "%s" caused error "%s"' % (update, error))
+            logger.warning('Update "%s" caused error "%s"' % (update, error))
 
         def stop(bot, update):
             bot.send_message(chat_id=update.message.chat_id,
