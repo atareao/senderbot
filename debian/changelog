@@ -1,8 +1,8 @@
-senderbot (0.3.0-0extras17.04.0) zesty; urgency=medium
+senderbot (0.3.0-0extras17.04.1) zesty; urgency=medium
 
   * Working alone
 
- -- Lorenzo Carbonell <lorenzo.carbonell.cerezo@gmail.com>  Sat, 30 Sep 2017 07:29:33 +0200
+ -- Lorenzo Carbonell <lorenzo.carbonell.cerezo@gmail.com>  Sat, 30 Sep 2017 07:40:07 +0200
 
 senderbot (0.2.1-0extras17.04.0) zesty; urgency=medium
 
