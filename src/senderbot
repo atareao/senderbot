@@ -216,6 +216,13 @@ def only():
             bot.send_message(chat_id=update.message.chat_id,
                              text="¿Si?, mi amo!")
 
+        def donde(bot, update):
+            user_location = update.message.location
+            message = 'Tus coordenadas son: latitud={0} y longitud={1}'.format(
+                user_location.latitude, user_location.longitude)
+            bot.send_message(chat_id=update.message.chat_id,
+                             text=message)
+
         def temp(bot, update):
             data = open('/sys/class/thermal/thermal_zone0/temp', 'r')
             temperatura = data.read()
@@ -285,6 +292,9 @@ def only():
 
         start_handler = CommandHandler('start', start)
         dispatcher.add_handler(start_handler)
+
+        donde_handler = CommandHandler('donde', donde)
+        dispatcher.add_handler(donde_handler)
 
         temp_handler = CommandHandler('temp', temp)
         dispatcher.add_handler(temp_handler)

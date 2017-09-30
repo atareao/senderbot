@@ -1,3 +1,9 @@
+senderbot (0.3.3-0extras17.04.0) zesty; urgency=medium
+
+  * Added location
+
+ -- Lorenzo Carbonell <lorenzo.carbonell.cerezo@gmail.com>  Sat, 30 Sep 2017 08:37:43 +0200
+
 senderbot (0.3.2-0extras17.04.0) zesty; urgency=medium
 
   * Added servicios
