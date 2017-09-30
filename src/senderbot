@@ -252,6 +252,7 @@ def only():
 
         def button(bot, update):
             query = update.callback_query
+            print(query.data, type(query.data))
             if query.data == '1':
                 salida = run_command('systemctl status mariadb')
                 if salida is not None:
