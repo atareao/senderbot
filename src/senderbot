@@ -33,14 +33,14 @@ try:
     from telegram import Bot, ParseMode
     from telegram import InlineKeyboardButton, InlineKeyboardMarkup
     from telegram.ext import Updater
-    from telegram.ext import CommandHandler
+    from telegram.ext import CommandHandler, CallbackQueryHandler
     from telegram.ext import MessageHandler, Filters
 except Exception as e:
     sys.path.insert(1, '/usr/share/senderbot/')
     from telegram import Bot, ParseMode
     from telegram import InlineKeyboardButton, InlineKeyboardMarkup
     from telegram.ext import Updater
-    from telegram.ext import CommandHandler
+    from telegram.ext import CommandHandler, CallbackQueryHandler
     from telegram.ext import MessageHandler, Filters
 
 
@@ -241,15 +241,56 @@ def only():
                              text="Algo no va bien!!! Samba está parado!")
 
         def info(bot, update):
-            keyboard = [[InlineKeyboardButton("Option 1", callback_data='1'),
-                         InlineKeyboardButton("Option 2", callback_data='2')],
-
-                        [InlineKeyboardButton("Option 3", callback_data='3')]]
+            keyboard = [[InlineKeyboardButton("MariaDB", callback_data='1'),
+                         InlineKeyboardButton("Apache", callback_data='2')],
+                        [InlineKeyboardButton("OpenVPN", callback_data='3')]]
 
             reply_markup = InlineKeyboardMarkup(keyboard)
 
             update.message.reply_text('Please choose:',
                                       reply_markup=reply_markup)
+
+        def button(bot, update):
+            query = update.callback_query
+            if query.data == 1:
+                salida = run_command('systemctl status mariadb')
+                if salida is not None:
+                    if salida.find('running') > -1:
+                        bot.send_message(chat_id=update.message.chat_id,
+                                         text="MariaDB está funcionando!")
+                        return
+                    elif salida.find('dead') > -1:
+                        bot.send_message(chat_id=update.message.chat_id,
+                                         text="MariaDB está parado!")
+                        return
+                bot.send_message(chat_id=update.message.chat_id,
+                                 text="Algo no va bien!! MariaDB está parado!")
+            elif query.data == 2:
+                salida = run_command('systemctl status apache2')
+                if salida is not None:
+                    if salida.find('running') > -1:
+                        bot.send_message(chat_id=update.message.chat_id,
+                                         text="Apache está funcionando!")
+                        return
+                    elif salida.find('dead') > -1:
+                        bot.send_message(chat_id=update.message.chat_id,
+                                         text="Apache está parado!")
+                        return
+                bot.send_message(chat_id=update.message.chat_id,
+                                 text="Algo no va bien!!! Apache está parado!")
+            elif query.data == 3:
+                salida = run_command('systemctl status openvpn')
+                if salida is not None:
+                    if salida.find('Active: active') > -1:
+                        bot.send_message(chat_id=update.message.chat_id,
+                                         text="El VPN está funcionando!")
+                        return
+                    elif salida.find('dead') > -1:
+                        bot.send_message(chat_id=update.message.chat_id,
+                                         text="El VPN está parado!")
+                        return
+                bot.send_message(chat_id=update.message.chat_id,
+                                 text="Algo no va bien!!! El VPN está parado!")
 
         def mariadb(bot, update):
             salida = run_command('systemctl status mariadb')
@@ -315,6 +356,7 @@ def only():
 
         info_handler = CommandHandler('info', info)
         dispatcher.add_handler(info_handler)
+        dispatcher.add_handler(CallbackQueryHandler(button))
 
         temp_handler = CommandHandler('temp', temp)
         dispatcher.add_handler(temp_handler)
