@@ -238,6 +238,34 @@ def only():
             bot.send_message(chat_id=update.message.chat_id,
                              text="Algo no va bien!!! Samba está parado!")
 
+        def mariadb(bot, update):
+            salida = run_command('systemctl status mariadb')
+            if salida is not None:
+                if salida.find('running') > -1:
+                    bot.send_message(chat_id=update.message.chat_id,
+                                     text="MariaDB está funcionando!")
+                    return
+                elif salida.find('dead') > -1:
+                    bot.send_message(chat_id=update.message.chat_id,
+                                     text="MariaDB está parado!")
+                    return
+            bot.send_message(chat_id=update.message.chat_id,
+                             text="Algo no va bien!!! MariaDB está parado!")
+
+        def apache(bot, update):
+            salida = run_command('systemctl status apache2')
+            if salida is not None:
+                if salida.find('running') > -1:
+                    bot.send_message(chat_id=update.message.chat_id,
+                                     text="Apache está funcionando!")
+                    return
+                elif salida.find('dead') > -1:
+                    bot.send_message(chat_id=update.message.chat_id,
+                                     text="Apache está parado!")
+                    return
+            bot.send_message(chat_id=update.message.chat_id,
+                             text="Algo no va bien!!! Apache está parado!")
+
         def caps(bot, update, args):
             text_caps = ' '.join(args).upper()
             bot.send_message(chat_id=update.message.chat_id, text=text_caps)
@@ -263,6 +291,12 @@ def only():
 
         samba_handler = CommandHandler('samba', samba)
         dispatcher.add_handler(samba_handler)
+
+        samba_mariadb = CommandHandler('mariadb', mariadb)
+        dispatcher.add_handler(samba_mariadb)
+
+        apache_handler = CommandHandler('apache', apache)
+        dispatcher.add_handler(apache_handler)
 
         caps_handler = CommandHandler('caps', caps, pass_args=True)
         dispatcher.add_handler(caps_handler)
