@@ -373,8 +373,8 @@ def only():
             img = Image.open(BytesIO(response.content))
             img = img.convert('LA')
             bio = BytesIO()
-            bio.name = 'image.jpeg'
-            img.save(bio, 'JPEG')
+            bio.name = 'image.png'
+            img.save(bio, 'PNG')
             bio.seek(0)
             bot.send_phot(chat_id=update.message.chat_id,
                           photo=bio)
