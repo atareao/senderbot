@@ -275,7 +275,7 @@ def only():
 
         def button(bot, update):
             query = update.callback_query
-            logger.warning('TELEGRAM query data: "%s" type: "%s"' % (
+            logger.info('TELEGRAM query data: "%s" type: "%s"' % (
                 str(query.data), str(type(query.data))))
             if query.data == '1':
                 salida = run_command('systemctl status mariadb')
@@ -396,7 +396,7 @@ def only():
         def tobase64(bot, update):
             photo_file = bot.get_file(update.message.photo[-1].file_id)
             response = requests.get(photo_file['file_path'])
-            encoded_string = base64.b64encode(response)
+            encoded_string = base64.b64encode(response.content)
             bot.send_message(chat_id=update.message.chat_id,
                              text=encoded_string)
 
