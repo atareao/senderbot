@@ -386,7 +386,9 @@ def only():
 
         info_handler = CommandHandler('info', info)
         dispatcher.add_handler(info_handler)
-        dispatcher.add_handler(CallbackQueryHandler(button))
+
+        query_handler = CallbackQueryHandler(button)
+        dispatcher.add_handler(query_handler)
 
         temp_handler = CommandHandler('temp', temp)
         dispatcher.add_handler(temp_handler)
