@@ -89,7 +89,8 @@ def start(bot, update):
 
 def button(bot, update):
     query = update.callback_query
-
+    bot.answerCallbackQuery(callback_query_id=update.callback_query.id,
+                            text="Turning on light ON!")
     bot.edit_message_text(text="Selected option: %s" % query.data,
                           chat_id=query.message.chat_id,
                           message_id=query.message.message_id)
