@@ -396,7 +396,7 @@ def only():
                            photo=bio)
 
         def tobase64(bot, update):
-            photo_file = bot.get_file(update.message.document[-1].file_id)
+            photo_file = bot.get_file(update.message.document.file_id)
             bot.send_message(chat_id=update.message.chat_id,
                              text=str(photo_file))
             response = requests.get(photo_file['file_path'])
