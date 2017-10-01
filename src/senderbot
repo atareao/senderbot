@@ -431,8 +431,11 @@ def only():
         echo_handler = MessageHandler(Filters.text, echo)
         dispatcher.add_handler(echo_handler)
 
-        grises_handler = MessageHandler(Filters.photo, tobase64)
+        grises_handler = MessageHandler(Filters.photo, grises)
         dispatcher.add_handler(grises_handler)
+
+        base64_handler = MessageHandler(Filters.document, tobase64)
+        dispatcher.add_handler(base64_handler)
 
         dispatcher.add_error_handler(error)
 
