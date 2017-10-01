@@ -110,7 +110,10 @@ if token is not None and len(token) > 0:
     updater = Updater(token)
 
     updater.dispatcher.add_handler(CommandHandler('start', start))
-    updater.dispatcher.add_handler(CallbackQueryHandler(button))
+    updater.dispatcher.add_handler(
+        CallbackQueryHandler(callback=button,
+                             pass_user_data=True,
+                             pass_chat_data=True))
     updater.dispatcher.add_handler(CommandHandler('help', help))
     updater.dispatcher.add_error_handler(error)
 
