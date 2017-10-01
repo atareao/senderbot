@@ -13,6 +13,8 @@ Depends: ${misc:Depends}, ${python:Depends},
 	python3-requests,
 	python3-pil,
 	python3-future,
-	python3-certifi
+	python3-certifi,
+	fortune-mod,
+	fortunes-es
 Description: A bot to sender messages to Channel o Group
  SenderBot is a Telegram Bot that sends messages to Channel o Group

@@ -342,6 +342,12 @@ def only():
             bot.send_message(chat_id=update.message.chat_id,
                              text="Algo no va bien!!! El VPN está parado!")
 
+        def consejo(bot, update):
+            salida = run_command('fortune')
+            if salida is not None:
+                bot.send_message(chat_id=update.message.chat_id,
+                                 text=salida)
+
         def caps(bot, update, args):
             text_caps = ' '.join(args).upper()
             bot.send_message(chat_id=update.message.chat_id, text=text_caps)
@@ -383,6 +389,9 @@ def only():
 
         start_handler = CommandHandler('start', start)
         dispatcher.add_handler(start_handler)
+
+        consejo_handler = CommandHandler('consejo', consejo)
+        dispatcher.add_handler(consejo_handler)
 
         info_handler = CommandHandler('info', info)
         dispatcher.add_handler(info_handler)
