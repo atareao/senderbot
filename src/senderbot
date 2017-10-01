@@ -277,6 +277,7 @@ def only():
             query = update.callback_query
             bot.send_message(chat_id=update.message.chat_id,
                              text=query.data)
+            '''
             logger.info('TELEGRAM query data: "%s" type: "%s"' % (
                 str(query.data), str(type(query.data))))
             if query.data == '1':
@@ -297,6 +298,7 @@ def only():
                         text="Algo no va bien!! MariaDB está parado!",
                         chat_id=query.message.chat_id,
                         message_id=query.message.message_id)
+            '''
 
         def mariadb(bot, update):
             salida = run_command('systemctl status mariadb')
