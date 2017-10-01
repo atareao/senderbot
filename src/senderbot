@@ -396,7 +396,7 @@ def only():
         def tobase64(bot, update):
             photo_file = bot.get_file(update.message.photo[-1].file_id)
             response = requests.get(photo_file['file_path'])
-            encoded_string = base64.b64encode(response.content)
+            encoded_string = base64.b64encode(response.content).decode()
             bot.send_message(chat_id=update.message.chat_id,
                              text=encoded_string)
 
