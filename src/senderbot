@@ -284,42 +284,19 @@ def only():
                 if salida is not None:
                     if salida.find('running') > -1:
                         bot.edit_message_text(
+                            text="MariaDB está funcionando!",
                             chat_id=query.message.chat_id,
-                            message_id=query.message.message_id,
-                            text="MariaDB está funcionando!")
-                        return
+                            message_id=query.message.message_id)
                     elif salida.find('dead') > -1:
-                        bot.send_message(chat_id=update.message.chat_id,
-                                         text="MariaDB está parado!")
-                        return
-                bot.send_message(chat_id=update.message.chat_id,
-                                 text="Algo no va bien!! MariaDB está parado!")
-            elif query.data == '2':
-                salida = run_command('systemctl status apache2')
-                if salida is not None:
-                    if salida.find('running') > -1:
-                        bot.send_message(chat_id=update.message.chat_id,
-                                         text="Apache está funcionando!")
-                        return
-                    elif salida.find('dead') > -1:
-                        bot.send_message(chat_id=update.message.chat_id,
-                                         text="Apache está parado!")
-                        return
-                bot.send_message(chat_id=update.message.chat_id,
-                                 text="Algo no va bien!!! Apache está parado!")
-            elif query.data == '3':
-                salida = run_command('systemctl status openvpn')
-                if salida is not None:
-                    if salida.find('Active: active') > -1:
-                        bot.send_message(chat_id=update.message.chat_id,
-                                         text="El VPN está funcionando!")
-                        return
-                    elif salida.find('dead') > -1:
-                        bot.send_message(chat_id=update.message.chat_id,
-                                         text="El VPN está parado!")
-                        return
-                bot.send_message(chat_id=update.message.chat_id,
-                                 text="Algo no va bien!!! El VPN está parado!")
+                        bot.edit_message_text(
+                            text="MariaDB está parado!",
+                            chat_id=query.message.chat_id,
+                            message_id=query.message.message_id)
+                else:
+                    bot.edit_message_text(
+                        text="Algo no va bien!! MariaDB está parado!",
+                        chat_id=query.message.chat_id,
+                        message_id=query.message.message_id)
 
         def mariadb(bot, update):
             salida = run_command('systemctl status mariadb')
@@ -397,8 +374,6 @@ def only():
 
         def tobase64(bot, update):
             photo_file = bot.get_file(update.message.document.file_id)
-            bot.send_message(chat_id=update.message.chat_id,
-                             text=str(photo_file))
             response = requests.get(photo_file['file_path'])
             encoded_string = base64.b64encode(response.content).decode()
             bot.send_message(chat_id=update.message.chat_id,
