@@ -10,8 +10,8 @@ import codecs
 import os
 import logging
 
-import telebot
-from telebot import types
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
 
 
 APP = 'senderbot'
@@ -78,77 +78,48 @@ class Configuration(object):
         f.close()
 
 
-class User:
-    def __init__(self, name):
-        self.name = name
-        self.age = None
-        self.sex = None
+def start(bot, update):
+    keyboard = [[InlineKeyboardButton("Option 1", callback_data='1'),
+                 InlineKeyboardButton("Option 2", callback_data='2')],
+
+                [InlineKeyboardButton("Option 3", callback_data='3')]]
+
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    update.message.reply_text('Please choose:', reply_markup=reply_markup)
+
+
+def button(bot, update):
+    query = update.callback_query
+
+    bot.edit_message_text(text="Selected option: %s" % query.data,
+                          chat_id=query.message.chat_id,
+                          message_id=query.message.message_id)
+
+
+def help(bot, update):
+    update.message.reply_text("Use /start to test this bot.")
+
+
+def error(bot, update, error):
+    logging.warning('Update "%s" caused error "%s"' % (update, error))
 
 
 configuration = Configuration()
 token = configuration.get('token')
-bot = telebot.TeleBot(token)
-
-user_dict = {}
 
 
-# Handle '/start' and '/help'
-@bot.message_handler(commands=['help', 'start'])
-def send_welcome(message):
-    msg = bot.reply_to(message, """\
-Hi there, I am Example bot.
-What's your name?
-""")
-    bot.register_next_step_handler(msg, process_name_step)
+# Create the Updater and pass it your bot's token.
+updater = Updater(token)
 
+updater.dispatcher.add_handler(CommandHandler('start', start))
+updater.dispatcher.add_handler(CallbackQueryHandler(button))
+updater.dispatcher.add_handler(CommandHandler('help', help))
+updater.dispatcher.add_error_handler(error)
 
-def process_name_step(message):
-    try:
-        chat_id = message.chat.id
-        name = message.text
-        user = User(name)
-        user_dict[chat_id] = user
-        msg = bot.reply_to(message, 'How old are you?')
-        bot.register_next_step_handler(msg, process_age_step)
-    except Exception as e:
-        print(e)
-        bot.reply_to(message, 'oooops')
+# Start the Bot
+updater.start_polling()
 
-
-def process_age_step(message):
-    try:
-        chat_id = message.chat.id
-        age = message.text
-        if not age.isdigit():
-            msg = bot.reply_to(message,
-                               'Age should be a number. How old are you?')
-            bot.register_next_step_handler(msg, process_age_step)
-            return
-        user = user_dict[chat_id]
-        user.age = age
-        markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
-        markup.add('Male', 'Female')
-        msg = bot.reply_to(message, 'What is your gender', reply_markup=markup)
-        bot.register_next_step_handler(msg, process_sex_step)
-    except Exception as e:
-        print(e)
-        bot.reply_to(message, 'oooops')
-
-
-def process_sex_step(message):
-    try:
-        chat_id = message.chat.id
-        sex = message.text
-        user = user_dict[chat_id]
-        if (sex == u'Male') or (sex == u'Female'):
-            user.sex = sex
-        else:
-            raise Exception()
-        bot.send_message(chat_id, 'Nice to meet you ' + user.name + '\n Age:' +
-                         str(user.age) + '\n Sex:' + user.sex)
-    except Exception as e:
-        print(e)
-        bot.reply_to(message, 'oooops')
-
-
-bot.polling()
+# Run the bot until the user presses Ctrl-C or the process receives SIGINT,
+# SIGTERM or SIGABRT
+updater.idle()
