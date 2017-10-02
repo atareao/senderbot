@@ -89,10 +89,6 @@ def start(bot, update):
 def button(bot, update):
     logging.warning('Update "%s" caused error "%s"' % (1, 2))
 
-    bot.answerCallbackQuery(
-        callback_query_id=update.callback_query.id,
-        message_id=update.callback_query.message.message_id,
-        text="Turning on light ON!")
     bot.edit_message_text(
         text="Selected option: %s" % update.callback_query.data,
         chat_id=update.callback_query.message.chat_id,
@@ -116,8 +112,8 @@ if token is not None and len(token) > 0:
     updater.dispatcher.add_handler(CommandHandler('start', start))
     updater.dispatcher.add_handler(
         CallbackQueryHandler(callback=button))
-    updater.dispatcher.add_handler(CommandHandler('help', help))
-    updater.dispatcher.add_error_handler(error)
+    #updater.dispatcher.add_handler(CommandHandler('help', help))
+    #updater.dispatcher.add_error_handler(error)
 
     # Start the Bot
     updater.start_polling()
