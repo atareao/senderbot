@@ -11,7 +11,6 @@ import os
 import logging
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
-from telegram.ext import ConversationHandler
 
 APP = 'senderbot'
 APPNAME = 'SenderBot'
@@ -77,51 +76,28 @@ class Configuration(object):
         f.close()
 
 
-FIRST, SECOND = range(2)
-
-
 def start(bot, update):
-    keyboard = [
-        [InlineKeyboardButton(u"Next", callback_data=str(FIRST))]
-    ]
+    keyboard = [[InlineKeyboardButton("Option 1", callback_data='1'),
+                 InlineKeyboardButton("Option 2", callback_data='2')],
+                [InlineKeyboardButton("Option 3", callback_data='3')]]
+
     reply_markup = InlineKeyboardMarkup(keyboard)
-    update.message.reply_text(
-        u"Start handler, Press next",
-        reply_markup=reply_markup
-    )
-    return FIRST
+    update.message.reply_text('Please choose:', reply_markup=reply_markup)
 
 
-def first(bot, update):
+def button(bot, update):
     query = update.callback_query
-    keyboard = [
-        [InlineKeyboardButton(u"Next", callback_data=str(SECOND))]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    bot.edit_message_text(
-        chat_id=query.message.chat_id,
-        message_id=query.message.message_id,
-        text=u"First CallbackQueryHandler, Press next"
-    )
-
-    reply_markup = InlineKeyboardMarkup(keyboard)
-
-    bot.edit_message_reply_markup(
-        chat_id=query.message.chat_id,
-        message_id=query.message.message_id,
-        reply_markup=reply_markup
-    )
-    return SECOND
+    bot.editMessageText(text="Selected option: %s" % query.data,
+                        chat_id=query.message.chat_id,
+                        message_id=query.message.message_id)
 
 
-def second(bot, update):
-    query = update.callback_query
-    bot.edit_message_text(
-        chat_id=query.message.chat_id,
-        message_id=query.message.message_id,
-        text=u"Second CallbackQueryHandler"
-    )
-    return
+def help(bot, update):
+    update.message.reply_text("Use /start to test this bot.")
+
+
+def error(bot, update, error):
+    logging.warning('Update "%s" caused error "%s"' % (update, error))
 
 
 # Create the Updater and pass it your bot's token.
@@ -130,16 +106,10 @@ token = configuration.get('token')
 if token is not None and len(token) > 0:
     updater = Updater(token)
 
-    conv_handler = ConversationHandler(
-        entry_points=[CommandHandler('start', start)],
-        states={
-            FIRST: [CallbackQueryHandler(first)],
-            SECOND: [CallbackQueryHandler(second)]
-        },
-        fallbacks=[CommandHandler('start', start)],
-        per_message=True)
-
-    updater.dispatcher.add_handler(conv_handler)
+    updater.dispatcher.add_handler(CommandHandler('start', start))
+    updater.dispatcher.add_handler(CallbackQueryHandler(button))
+    updater.dispatcher.add_handler(CommandHandler('help', help))
+    updater.dispatcher.add_error_handler(error)
 
     # Start the Bot
     updater.start_polling()
