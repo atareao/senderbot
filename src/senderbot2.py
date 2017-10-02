@@ -82,9 +82,9 @@ def start(bot, update):
           InlineKeyboardButton(text='opcion 2', callback_data='2')],
          [InlineKeyboardButton(text='opcion 3', callback_data='3'),
           InlineKeyboardButton(text='opcion 4', callback_data='4')]])
-    bot.send_message(chat_id=update.message.chat_id,
-                     text="Custom Keyboard Test",
-                     reply_markup=custom_keyboard)
+    bot.answerCallbackQuery(update.callback_query.id,
+                            text="Please switch to the group you selected!",
+                            show_alert=False)
     update.message.reply_text('Ejemplo de teclado:',
                               reply_markup=custom_keyboard)
 
@@ -93,6 +93,7 @@ def button(bot, update):
     logging.warning('Update "%s" caused error "%s"' % (1, 2))
     query = update.callback_query
     bot.answerCallbackQuery(callback_query_id=update.callback_query.id,
+                            message_id=query.message.message_id,
                             text="Turning on light ON!")
     bot.edit_message_text(text="Selected option: %s" % query.data,
                           chat_id=query.message.chat_id,
