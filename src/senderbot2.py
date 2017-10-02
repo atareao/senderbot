@@ -97,6 +97,36 @@ def button(bot, update):
         message_id=update.callback_query.message.message_id)
 
 
+def calculator(bot, update):
+    keyboard = [[InlineKeyboardButton("7", callback_data='7'),
+                 InlineKeyboardButton("8", callback_data='8'),
+                 InlineKeyboardButton("9", callback_data='9'),
+                 InlineKeyboardButton("/", callback_data='/')],
+
+                [InlineKeyboardButton("4", callback_data='4'),
+                 InlineKeyboardButton("5", callback_data='5'),
+                 InlineKeyboardButton("6", callback_data='6'),
+                 InlineKeyboardButton("*", callback_data='*')],
+
+                [InlineKeyboardButton("1", callback_data='1'),
+                 InlineKeyboardButton("2", callback_data='2'),
+                 InlineKeyboardButton("3", callback_data='3'),
+                 InlineKeyboardButton("+", callback_data='+')],
+
+                [InlineKeyboardButton("0", callback_data='0'),
+                 InlineKeyboardButton(".", callback_data='.'),
+                 InlineKeyboardButton("-", callback_data='-'),
+                 InlineKeyboardButton("√", callback_data='√')]]
+
+    def CallbackQueryHandler():
+        if update.callback_query.data == "7":
+            update.message.reply_text("Complete")
+
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    update.message.reply_text('Please choose:', reply_markup=reply_markup)
+
+
 def help(bot, update):
     logging.warning('Update "%s" caused error "%s"' % (2, 2))
     update.message.reply_text("Use /start to test this bot.")
@@ -118,6 +148,8 @@ if token is not None and len(token) > 0:
         CallbackQueryHandler(callback=button, pattern=None))
     updater.dispatcher.add_handler(CommandHandler('help', help))
     updater.dispatcher.add_error_handler(error)
+    updater.dispatcher.add_handler(CommandHandler('calculator', calculator))
+    updater.dispatcher.add_handler(CommandHandler('7', CallbackQueryHandler))
 
     # Start the Bot
     updater.start_polling()
