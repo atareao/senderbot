@@ -89,9 +89,10 @@ def start(bot, update):
                     reply_markup=custom_keyboard)
 
 
-def button(bot, update):
+def myselection(bot, update):
+    print(update)
+    logging.warning(str(update))
     logging.warning('Update "%s" caused error "%s"' % (1, 1))
-
     bot.edit_message_text(
         text="Selected option: %s" % update.callback_query.data,
         chat_id=update.callback_query.message.chat_id,
@@ -144,7 +145,9 @@ token = configuration.get('token')
 if token is not None and len(token) > 0:
     updater = Updater(token)
 
-    updater.dispatcher.add_handler(CallbackQueryHandler(callback=button))
+    print(1)
+    updater.dispatcher.add_handler(CallbackQueryHandler(callback=myselection))
+    print(2)
     updater.dispatcher.add_handler(CommandHandler('start', start))
     updater.dispatcher.add_handler(CommandHandler('help', help))
     updater.dispatcher.add_error_handler(error)
