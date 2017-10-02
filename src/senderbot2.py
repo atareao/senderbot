@@ -133,9 +133,10 @@ if token is not None and len(token) > 0:
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler('start', start)],
         states={
-            FIRST: [CallbackQueryHandler(first, per_message=True)],
+            FIRST: [CallbackQueryHandler(first)],
             SECOND: [CallbackQueryHandler(second)]
         },
+        per_message=True,
         fallbacks=[CommandHandler('start', start)])
 
     updater.dispatcher.add_handler(conv_handler)
