@@ -9,7 +9,7 @@ import json
 import codecs
 import os
 import logging
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
 
 APP = 'senderbot'
@@ -77,14 +77,12 @@ class Configuration(object):
 
 
 def start(bot, update):
-    keyboard = [[InlineKeyboardButton("Option 1", callback_data='1'),
-                 InlineKeyboardButton("Option 2", callback_data='2')],
-
-                [InlineKeyboardButton("Option 3", callback_data='3')]]
-
-    reply_markup = InlineKeyboardMarkup(keyboard)
-
-    update.message.reply_text('Please choose:', reply_markup=reply_markup)
+    custom_keyboard = [['top-left', 'top-right'],
+                       ['bottom-left', 'bottom-right']]
+    reply_markup = ReplyKeyboardMarkup(custom_keyboard)
+    bot.send_message(chat_id=update.message.chat_id,
+                     text="Custom Keyboard Test",
+                     reply_markup=reply_markup)
 
 
 def button(bot, update):
