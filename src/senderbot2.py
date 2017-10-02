@@ -77,12 +77,14 @@ class Configuration(object):
 
 
 def start(bot, update):
-    custom_keyboard = [['top-left', 'top-right'],
-                       ['bottom-left', 'bottom-right']]
-    reply_markup = ReplyKeyboardMarkup(custom_keyboard)
+    custom_keyboard = InlineKeyboardMarkup(
+        [InlineKeyboardButton(text='opcion 1', callback_data='1'),
+         InlineKeyboardButton(text='opcion 2', callback_data='2'),
+         InlineKeyboardButton(text='opcion 3', callback_data='3'),
+         InlineKeyboardButton(text='opcion 4', callback_data='4')])
     bot.send_message(chat_id=update.message.chat_id,
                      text="Custom Keyboard Test",
-                     reply_markup=reply_markup)
+                     reply_markup=custom_keyboard)
 
 
 def button(bot, update):
