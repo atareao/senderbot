@@ -133,7 +133,7 @@ if token is not None and len(token) > 0:
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler('start', start)],
         states={
-            FIRST: [CallbackQueryHandler(first)],
+            FIRST: [CallbackQueryHandler(first, per_message=True)],
             SECOND: [CallbackQueryHandler(second)]
         },
         fallbacks=[CommandHandler('start', start)])
