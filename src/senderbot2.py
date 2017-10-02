@@ -11,7 +11,7 @@ import os
 import logging
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
-from telegram.ext.dispatcher import run_async
+from telegram.ext import ConversationHandler
 
 APP = 'senderbot'
 APPNAME = 'SenderBot'
@@ -77,63 +77,51 @@ class Configuration(object):
         f.close()
 
 
+FIRST, SECOND = range(2)
+
+
 def start(bot, update):
-    logging.warning('Update "%s" caused error "%s"' % (0, 0))
-    keyboard = [[InlineKeyboardButton("one", callback_data='1'),
-                InlineKeyboardButton("two", callback_data='2')],
-                [InlineKeyboardButton("tree", callback_data='3')]]
+    keyboard = [
+        [InlineKeyboardButton(u"Next", callback_data=str(FIRST))]
+    ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    update.message.reply_text('Please choose:', reply_markup=reply_markup)
+    update.message.reply_text(
+        u"Start handler, Press next",
+        reply_markup=reply_markup
+    )
+    return FIRST
 
 
-def myselection(bot, update):
-    print(update)
-    logging.warning(str(update))
-    logging.warning('Update "%s" caused error "%s"' % (1, 1))
+def first(bot, update):
+    query = update.callback_query
+    keyboard = [
+        [InlineKeyboardButton(u"Next", callback_data=str(SECOND))]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
     bot.edit_message_text(
-        text="Selected option: %s" % update.callback_query.data,
-        chat_id=update.callback_query.message.chat_id,
-        message_id=update.callback_query.message.message_id)
-
-
-def calculator(bot, update):
-    keyboard = [[InlineKeyboardButton("7", callback_data='7'),
-                 InlineKeyboardButton("8", callback_data='8'),
-                 InlineKeyboardButton("9", callback_data='9'),
-                 InlineKeyboardButton("/", callback_data='/')],
-
-                [InlineKeyboardButton("4", callback_data='4'),
-                 InlineKeyboardButton("5", callback_data='5'),
-                 InlineKeyboardButton("6", callback_data='6'),
-                 InlineKeyboardButton("*", callback_data='*')],
-
-                [InlineKeyboardButton("1", callback_data='1'),
-                 InlineKeyboardButton("2", callback_data='2'),
-                 InlineKeyboardButton("3", callback_data='3'),
-                 InlineKeyboardButton("+", callback_data='+')],
-
-                [InlineKeyboardButton("0", callback_data='0'),
-                 InlineKeyboardButton(".", callback_data='.'),
-                 InlineKeyboardButton("-", callback_data='-'),
-                 InlineKeyboardButton("√", callback_data='√')]]
-
-    def CallbackQueryHandler():
-        if update.callback_query.data == "7":
-            update.message.reply_text("Complete")
+        chat_id=query.message.chat_id,
+        message_id=query.message.message_id,
+        text=u"First CallbackQueryHandler, Press next"
+    )
 
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    update.message.reply_text('Please choose:', reply_markup=reply_markup)
+    bot.edit_message_reply_markup(
+        chat_id=query.message.chat_id,
+        message_id=query.message.message_id,
+        reply_markup=reply_markup
+    )
+    return SECOND
 
 
-def help(bot, update):
-    logging.warning('Update "%s" caused error "%s"' % (2, 2))
-    update.message.reply_text("Use /start to test this bot.")
-
-
-def error(bot, update, error):
-    logging.warning('Update "%s" caused error "%s"' % (3, 3))
-    logging.warning('Update "%s" caused error "%s"' % (update, error))
+def second(bot, update):
+    query = update.callback_query
+    bot.edit_message_text(
+        chat_id=query.message.chat_id,
+        message_id=query.message.message_id,
+        text=u"Second CallbackQueryHandler"
+    )
+    return
 
 
 # Create the Updater and pass it your bot's token.
@@ -142,14 +130,15 @@ token = configuration.get('token')
 if token is not None and len(token) > 0:
     updater = Updater(token)
 
-    print(1)
-    updater.dispatcher.add_handler(CallbackQueryHandler(callback=myselection))
-    print(2)
-    updater.dispatcher.add_handler(CommandHandler('start', start))
-    updater.dispatcher.add_handler(CommandHandler('help', help))
-    updater.dispatcher.add_error_handler(error)
-    updater.dispatcher.add_handler(CommandHandler('calculator', calculator))
-    updater.dispatcher.add_handler(CommandHandler('7', CallbackQueryHandler))
+    conv_handler = ConversationHandler(
+        entry_points=[CommandHandler('start', start)],
+        states={
+            FIRST: [CallbackQueryHandler(first)],
+            SECOND: [CallbackQueryHandler(second)]
+        },
+        fallbacks=[CommandHandler('start', start)])
+
+    updater.dispatcher.add_handler(conv_handler)
 
     # Start the Bot
     updater.start_polling()
