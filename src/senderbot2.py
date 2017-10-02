@@ -77,6 +77,7 @@ class Configuration(object):
 
 
 def start(bot, update):
+    logging.warning('Update "%s" caused error "%s"' % (0, 0))
     custom_keyboard = InlineKeyboardMarkup(
         [[InlineKeyboardButton(text='opcion 1', callback_data='1'),
           InlineKeyboardButton(text='opcion 2', callback_data='2')],
@@ -87,7 +88,7 @@ def start(bot, update):
 
 
 def button(bot, update):
-    logging.warning('Update "%s" caused error "%s"' % (1, 2))
+    logging.warning('Update "%s" caused error "%s"' % (1, 1))
 
     bot.edit_message_text(
         text="Selected option: %s" % update.callback_query.data,
@@ -96,10 +97,12 @@ def button(bot, update):
 
 
 def help(bot, update):
+    logging.warning('Update "%s" caused error "%s"' % (2, 2))
     update.message.reply_text("Use /start to test this bot.")
 
 
 def error(bot, update, error):
+    logging.warning('Update "%s" caused error "%s"' % (3, 3))
     logging.warning('Update "%s" caused error "%s"' % (update, error))
 
 
