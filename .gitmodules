@@ -1,3 +1,6 @@
 [submodule "python-telegram-bot"]
 	path = python-telegram-bot
 	url = https://github.com/python-telegram-bot/python-telegram-bot
+[submodule "pyTelegramBotAPI"]
+	path = pyTelegramBotAPI
+	url = git@github.com:eternnoir/pyTelegramBotAPI.git
