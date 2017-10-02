@@ -83,9 +83,9 @@ def start(bot, update):
           InlineKeyboardButton(text='opcion 2', callback_data='2')],
          [InlineKeyboardButton(text='opcion 3', callback_data='3'),
           InlineKeyboardButton(text='opcion 4', callback_data='4')]])
-    update.message.reply_text('Ejemplo de teclado:',
-                              message_id=update.message.message_id,
-                              reply_markup=custom_keyboard)
+    bot.sendMessage(update.message.chat_id,
+                    text='Ejemplo de teclado:',
+                    reply_markup=custom_keyboard)
 
 
 def button(bot, update):
