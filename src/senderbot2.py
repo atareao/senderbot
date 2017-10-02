@@ -9,8 +9,8 @@ import json
 import codecs
 import os
 import logging
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup
-from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, ChosenInlineResultHandler
 
 APP = 'senderbot'
 APPNAME = 'SenderBot'
@@ -146,6 +146,7 @@ if token is not None and len(token) > 0:
     updater.dispatcher.add_handler(CommandHandler('start', start))
     updater.dispatcher.add_handler(
         CallbackQueryHandler(callback=button, pattern=None))
+    updater.dispatcher.add_handler(ChosenInlineResultHandler(callback=button))
     updater.dispatcher.add_handler(CommandHandler('help', help))
     updater.dispatcher.add_error_handler(error)
     updater.dispatcher.add_handler(CommandHandler('calculator', calculator))
