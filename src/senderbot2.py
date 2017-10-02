@@ -79,14 +79,11 @@ class Configuration(object):
 
 def start(bot, update):
     logging.warning('Update "%s" caused error "%s"' % (0, 0))
-    custom_keyboard = InlineKeyboardMarkup(
-        [[InlineKeyboardButton(text='opcion 1', callback_data='1'),
-          InlineKeyboardButton(text='opcion 2', callback_data='2')],
-         [InlineKeyboardButton(text='opcion 3', callback_data='3'),
-          InlineKeyboardButton(text='opcion 4', callback_data='4')]])
-    bot.sendMessage(update.message.chat_id,
-                    text='Ejemplo de teclado:',
-                    reply_markup=custom_keyboard)
+    keyboard = [[InlineKeyboardButton("one", callback_data='1'),
+                InlineKeyboardButton("two", callback_data='2')],
+                [InlineKeyboardButton("tree", callback_data='3')]]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    update.message.reply_text('Please choose:', reply_markup=reply_markup)
 
 
 def myselection(bot, update):
