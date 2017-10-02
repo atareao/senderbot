@@ -114,7 +114,7 @@ if token is not None and len(token) > 0:
 
     updater.dispatcher.add_handler(CommandHandler('start', start))
     updater.dispatcher.add_handler(
-        CallbackQueryHandler(callback=button))
+        CallbackQueryHandler(callback=button, pattern=None))
     updater.dispatcher.add_handler(CommandHandler('help', help))
     updater.dispatcher.add_error_handler(error)
 
