@@ -136,8 +136,8 @@ if token is not None and len(token) > 0:
             FIRST: [CallbackQueryHandler(first)],
             SECOND: [CallbackQueryHandler(second)]
         },
-        per_message=True,
-        fallbacks=[CommandHandler('start', start)])
+        fallbacks=[CommandHandler('start', start)],
+        per_message=True)
 
     updater.dispatcher.add_handler(conv_handler)
 
