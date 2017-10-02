@@ -85,9 +85,12 @@ def start(bot, update):
     bot.send_message(chat_id=update.message.chat_id,
                      text="Custom Keyboard Test",
                      reply_markup=custom_keyboard)
+    update.message.reply_text('Ejemplo de teclado:',
+                              reply_markup=custom_keyboard)
 
 
 def button(bot, update):
+    logging.warning('Update "%s" caused error "%s"' % (1, 2))
     query = update.callback_query
     bot.answerCallbackQuery(callback_query_id=update.callback_query.id,
                             text="Turning on light ON!")
