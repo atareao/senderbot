@@ -350,11 +350,11 @@ def only():
                     if salida.find('running') > -1:
                         bot.send_message(chat_id=update.message.chat_id,
                                          text="MariaDB está funcionando!")
-                        return
+                        return ConversationHandler.END
                     elif salida.find('dead') > -1:
                         bot.send_message(chat_id=update.message.chat_id,
                                          text="MariaDB está parado!")
-                        return
+                        return ConversationHandler.END
                 bot.send_message(chat_id=update.message.chat_id,
                                  text="Algo no va bien! MariaDB está parado!")
             elif selected == 'Apache':
@@ -363,11 +363,11 @@ def only():
                     if salida.find('running') > -1:
                         bot.send_message(chat_id=update.message.chat_id,
                                          text="Apache está funcionando!")
-                        return
+                        return ConversationHandler.END
                     elif salida.find('dead') > -1:
                         bot.send_message(chat_id=update.message.chat_id,
                                          text="Apache está parado!")
-                        return
+                        return ConversationHandler.END
                 bot.send_message(chat_id=update.message.chat_id,
                                  text="Algo no va bien!!! Apache está parado!")
             elif selected == 'OpenVPN':
@@ -376,13 +376,14 @@ def only():
                     if salida.find('Active: active') > -1:
                         bot.send_message(chat_id=update.message.chat_id,
                                          text="El VPN está funcionando!")
-                        return
+                        return ConversationHandler.END
                     elif salida.find('dead') > -1:
                         bot.send_message(chat_id=update.message.chat_id,
                                          text="El VPN está parado!")
-                        return
+                        return ConversationHandler.END
                 bot.send_message(chat_id=update.message.chat_id,
                                  text="Algo no va bien!!! El VPN está parado!")
+            return ConversationHandler.END
 
         def cancel(bot, update):
             update.message.reply_text('', reply_markup=ReplyKeyboardRemove())
