@@ -114,7 +114,7 @@ updater.dispatcher.add_handler(CommandHandler('help', help))
 updater.dispatcher.add_error_handler(error)
 
 # Start the Bot
-updater.start_polling(allowed_updates=[])
+updater.start_polling()#allowed_updates=[])
 
 # Run the bot until the user presses Ctrl-C or the process receives SIGINT,
 # SIGTERM or SIGABRT
