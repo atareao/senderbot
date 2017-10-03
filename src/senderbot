@@ -38,14 +38,14 @@ try:
     from telegram import Bot, ParseMode
     from telegram import ReplyKeyboardMarkup
     from telegram.ext import Updater
-    from telegram.ext import CommandHandler, CallbackQueryHandler
+    from telegram.ext import CommandHandler, ConversationHandler
     from telegram.ext import MessageHandler, Filters
 except Exception as e:
     sys.path.insert(1, '/usr/share/senderbot/')
     from telegram import Bot, ParseMode
     from telegram import ReplyKeyboardMarkup
     from telegram.ext import Updater
-    from telegram.ext import CommandHandler, CallbackQueryHandler
+    from telegram.ext import CommandHandler, ConversationHandler
     from telegram.ext import MessageHandler, Filters
 
 
@@ -64,6 +64,8 @@ CONFIG_APP_DIR = os.path.join(CONFIG_DIR, APP)
 CONFIG_FILE = os.path.join(CONFIG_APP_DIR, APPCONF)
 PARAMS = {'token': None,
           'channel_id': None}
+
+SERVICE = 1001
 
 if not os.path.exists(CONFIG_APP_DIR):
     os.makedirs(CONFIG_APP_DIR)
@@ -264,11 +266,12 @@ def only():
                              text="Algo no va bien!!! Samba está parado!")
 
         def info(bot, update):
-            reply_keyboard = [['|-|-|MariaDB', '|-|-|Apache', '|-|-|OpenVPN']]
+            reply_keyboard = [['MariaDB', 'Apache', 'OpenVPN']]
             update.message.reply_text(
                 'Selecciona un servicio:',
                 reply_markup=ReplyKeyboardMarkup(reply_keyboard,
                                                  one_time_keyboard=True))
+            return SERVICE
 
         def button(bot, update):
             query = update.callback_query
@@ -390,12 +393,6 @@ def only():
         consejo_handler = CommandHandler('consejo', consejo)
         dispatcher.add_handler(consejo_handler)
 
-        info_handler = CommandHandler('info', info)
-        dispatcher.add_handler(info_handler)
-
-        query_handler = CallbackQueryHandler(button, -1)
-        dispatcher.add_handler(query_handler)
-
         temp_handler = CommandHandler('temp', temp)
         dispatcher.add_handler(temp_handler)
 
@@ -416,6 +413,15 @@ def only():
 
         stop_handler = CommandHandler('stop', stop)
         dispatcher.add_handler(stop_handler)
+
+        conv_handler = ConversationHandler(
+            entry_points=[CommandHandler('info', info)],
+            states={
+                SERVICE: [RegexHandler('^(MariaDB|Apache|OpenVPN)$', service)]
+            },
+            fallbacks=[CommandHandler('cancel', cancel)]
+        )
+        dispatcher.add_handler(conv_handler)
 
         echo_handler = MessageHandler(Filters.text, echo)
         dispatcher.add_handler(echo_handler)
