@@ -37,16 +37,18 @@ import shlex
 try:
     from telegram import Bot, ParseMode
     from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
+    from telegram import InlineKeyboardButton, InlineKeyboardMarkup
     from telegram.ext import Updater
     from telegram.ext import CommandHandler, ConversationHandler, RegexHandler
-    from telegram.ext import MessageHandler, Filters
+    from telegram.ext import CallbackQueryHandler, MessageHandler, Filters
 except Exception as e:
     sys.path.insert(1, '/usr/share/senderbot/')
     from telegram import Bot, ParseMode
     from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
+    from telegram import InlineKeyboardButton, InlineKeyboardMarkup
     from telegram.ext import Updater
     from telegram.ext import CommandHandler, ConversationHandler, RegexHandler
-    from telegram.ext import MessageHandler, Filters
+    from telegram.ext import CallbackQueryHandler, MessageHandler, Filters
 
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - \
@@ -273,32 +275,62 @@ def only():
                                                  one_time_keyboard=True))
             return SERVICE
 
+        def info2(bot, update):
+            keyboard = [[InlineKeyboardButton("MariaDB", callback_data='1'),
+                         InlineKeyboardButton("Apache", callback_data='2')],
+                        [InlineKeyboardButton("OpenVPN", callback_data='3')]]
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            update.message.reply_text('Elige el servicio:',
+                                      reply_markup=reply_markup)
+
         def button(bot, update):
             query = update.callback_query
             bot.send_message(chat_id=update.message.chat_id,
                              text=query.data)
-            '''
             logger.info('TELEGRAM query data: "%s" type: "%s"' % (
                 str(query.data), str(type(query.data))))
             if query.data == '1':
                 salida = run_command('systemctl status mariadb')
                 if salida is not None:
                     if salida.find('running') > -1:
-                        bot.edit_message_text(
-                            text="MariaDB está funcionando!",
-                            chat_id=query.message.chat_id,
-                            message_id=query.message.message_id)
+                        msg = 'MariaDB está funcionando!'
                     elif salida.find('dead') > -1:
-                        bot.edit_message_text(
-                            text="MariaDB está parado!",
-                            chat_id=query.message.chat_id,
-                            message_id=query.message.message_id)
+                        msg = 'MariaDB está parado!'
+                    else:
+                        msg = 'Algo no va bien! MariaDB está parado!'
                 else:
-                    bot.edit_message_text(
-                        text="Algo no va bien!! MariaDB está parado!",
-                        chat_id=query.message.chat_id,
-                        message_id=query.message.message_id)
-            '''
+                    msg = 'Algo no va bien! MariaDB está parado!'
+                update.message.reply_text(
+                    msg,
+                    reply_markup=ReplyKeyboardRemove())
+            elif query.data == '2':
+                salida = run_command('systemctl status apache2')
+                if salida is not None:
+                    if salida.find('running') > -1:
+                        msg = 'Apache está funcionando!'
+                    elif salida.find('dead') > -1:
+                        msg = 'Apache está parado!'
+                    else:
+                        msg = 'Algo no va bien! Apache está parado!'
+                else:
+                    msg = 'Algo no va bien! Apache está parado!'
+                update.message.reply_text(
+                    msg,
+                    reply_markup=ReplyKeyboardRemove())
+            elif query.data == '3':
+                salida = run_command('systemctl status openvpn')
+                if salida is not None:
+                    if salida.find('Active: active') > -1:
+                        msg = 'OpenVPN está funcionando!'
+                    elif salida.find('dead') > -1:
+                        msg = 'OpenVPN está parado!'
+                    else:
+                        msg = 'Algo no va bien! OpenVPN está parado!'
+                else:
+                    msg = 'Algo no va bien! OpenVPN está parado!'
+                update.message.reply_text(
+                    msg,
+                    reply_markup=ReplyKeyboardRemove())
 
         def mariadb(bot, update):
             salida = run_command('systemctl status mariadb')
@@ -362,28 +394,30 @@ def only():
                 salida = run_command('systemctl status apache2')
                 if salida is not None:
                     if salida.find('running') > -1:
-                        bot.send_message(chat_id=update.message.chat_id,
-                                         text="Apache está funcionando!")
-                        return ConversationHandler.END
+                        msg = 'Apache está funcionando!'
                     elif salida.find('dead') > -1:
-                        bot.send_message(chat_id=update.message.chat_id,
-                                         text="Apache está parado!")
-                        return ConversationHandler.END
-                bot.send_message(chat_id=update.message.chat_id,
-                                 text="Algo no va bien!!! Apache está parado!")
+                        msg = 'Apache está parado!'
+                    else:
+                        msg = 'Algo no va bien! Apache está parado!'
+                else:
+                    msg = 'Algo no va bien! Apache está parado!'
+                update.message.reply_text(
+                    msg,
+                    reply_markup=ReplyKeyboardRemove())
             elif selected == 'OpenVPN':
                 salida = run_command('systemctl status openvpn')
                 if salida is not None:
                     if salida.find('Active: active') > -1:
-                        bot.send_message(chat_id=update.message.chat_id,
-                                         text="El VPN está funcionando!")
-                        return ConversationHandler.END
+                        msg = 'OpenVPN está funcionando!'
                     elif salida.find('dead') > -1:
-                        bot.send_message(chat_id=update.message.chat_id,
-                                         text="El VPN está parado!")
-                        return ConversationHandler.END
-                bot.send_message(chat_id=update.message.chat_id,
-                                 text="Algo no va bien!!! El VPN está parado!")
+                        msg = 'OpenVPN está parado!'
+                    else:
+                        msg = 'Algo no va bien! OpenVPN está parado!'
+                else:
+                    msg = 'Algo no va bien! OpenVPN está parado!'
+                update.message.reply_text(
+                    msg,
+                    reply_markup=ReplyKeyboardRemove())
             return ConversationHandler.END
 
         def cancel(bot, update):
@@ -461,6 +495,10 @@ def only():
 
         stop_handler = CommandHandler('stop', stop)
         dispatcher.add_handler(stop_handler)
+
+        info2_handler = CommandHandler('info2', info2)
+        dispatcher.add_handler(info2_handler)
+        dispatcher.add_handler(CallbackQueryHandler(button))
 
         conv_handler = ConversationHandler(
             entry_points=[CommandHandler('info', info)],
