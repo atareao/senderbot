@@ -36,14 +36,14 @@ import subprocess
 import shlex
 try:
     from telegram import Bot, ParseMode
-    from telegram import ReplyKeyboardMarkup
+    from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
     from telegram.ext import Updater
     from telegram.ext import CommandHandler, ConversationHandler, RegexHandler
     from telegram.ext import MessageHandler, Filters
 except Exception as e:
     sys.path.insert(1, '/usr/share/senderbot/')
     from telegram import Bot, ParseMode
-    from telegram import ReplyKeyboardMarkup
+    from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
     from telegram.ext import Updater
     from telegram.ext import CommandHandler, ConversationHandler, RegexHandler
     from telegram.ext import MessageHandler, Filters
@@ -383,6 +383,10 @@ def only():
                         return
                 bot.send_message(chat_id=update.message.chat_id,
                                  text="Algo no va bien!!! El VPN está parado!")
+
+        def cancel(bot, update):
+            update.message.reply_text('', reply_markup=ReplyKeyboardRemove())
+            return ConversationHandler.END
 
         def consejo(bot, update):
             salida = run_command('fortune')
