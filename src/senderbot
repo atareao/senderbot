@@ -348,15 +348,16 @@ def only():
                 salida = run_command('systemctl status mariadb')
                 if salida is not None:
                     if salida.find('running') > -1:
-                        bot.send_message(chat_id=update.message.chat_id,
-                                         text="MariaDB está funcionando!")
-                        return ConversationHandler.END
+                        msg = 'MariaDB está funcionando!'
                     elif salida.find('dead') > -1:
-                        bot.send_message(chat_id=update.message.chat_id,
-                                         text="MariaDB está parado!")
-                        return ConversationHandler.END
-                bot.send_message(chat_id=update.message.chat_id,
-                                 text="Algo no va bien! MariaDB está parado!")
+                        msg = 'MariaDB está parado!'
+                    else:
+                        msg = 'Algo no va bien! MariaDB está parado!'
+                else:
+                    msg = 'Algo no va bien! MariaDB está parado!'
+                update.message.reply_text(
+                    msg,
+                    reply_markup=ReplyKeyboardRemove())
             elif selected == 'Apache':
                 salida = run_command('systemctl status apache2')
                 if salida is not None:
