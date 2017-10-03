@@ -524,7 +524,7 @@ def only():
         dispatcher.add_handler(unknown_handler)
 
         # Start the Bot
-        updater.start_polling()
+        updater.start_polling(allowed_updates=[])
 
         # Run the bot until you press Ctrl-C or the process receives SIGINT,
         # SIGTERM or SIGABRT. This should be used most of the time, since
