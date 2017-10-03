@@ -298,9 +298,9 @@ def only():
                         msg = 'Algo no va bien! MariaDB está parado!'
                 else:
                     msg = 'Algo no va bien! MariaDB está parado!'
-                update.message.reply_text(
-                    msg,
-                    reply_markup=ReplyKeyboardRemove())
+                bot.edit_message_text(text=msg,
+                                      chat_id=query.message.chat_id,
+                                      message_id=query.message.message_id)
             elif query.data == '2':
                 salida = run_command('systemctl status apache2')
                 if salida is not None:
@@ -312,9 +312,9 @@ def only():
                         msg = 'Algo no va bien! Apache está parado!'
                 else:
                     msg = 'Algo no va bien! Apache está parado!'
-                update.message.reply_text(
-                    msg,
-                    reply_markup=ReplyKeyboardRemove())
+                bot.edit_message_text(text=msg,
+                                      chat_id=query.message.chat_id,
+                                      message_id=query.message.message_id)
             elif query.data == '3':
                 salida = run_command('systemctl status openvpn')
                 if salida is not None:
@@ -326,9 +326,9 @@ def only():
                         msg = 'Algo no va bien! OpenVPN está parado!'
                 else:
                     msg = 'Algo no va bien! OpenVPN está parado!'
-                update.message.reply_text(
-                    msg,
-                    reply_markup=ReplyKeyboardRemove())
+                bot.edit_message_text(text=msg,
+                                      chat_id=query.message.chat_id,
+                                      message_id=query.message.message_id)
 
         def mariadb(bot, update):
             salida = run_command('systemctl status mariadb')
