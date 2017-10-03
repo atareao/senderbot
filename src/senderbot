@@ -38,14 +38,14 @@ try:
     from telegram import Bot, ParseMode
     from telegram import ReplyKeyboardMarkup
     from telegram.ext import Updater
-    from telegram.ext import CommandHandler, ConversationHandler
+    from telegram.ext import CommandHandler, ConversationHandler, RegexHandler
     from telegram.ext import MessageHandler, Filters
 except Exception as e:
     sys.path.insert(1, '/usr/share/senderbot/')
     from telegram import Bot, ParseMode
     from telegram import ReplyKeyboardMarkup
     from telegram.ext import Updater
-    from telegram.ext import CommandHandler, ConversationHandler
+    from telegram.ext import CommandHandler, ConversationHandler, RegexHandler
     from telegram.ext import MessageHandler, Filters
 
 
