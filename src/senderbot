@@ -342,6 +342,48 @@ def only():
             bot.send_message(chat_id=update.message.chat_id,
                              text="Algo no va bien!!! El VPN está parado!")
 
+        def service(bot, update):
+            selected = update.message.text
+            if selected == 'MariaDB':
+                salida = run_command('systemctl status mariadb')
+                if salida is not None:
+                    if salida.find('running') > -1:
+                        bot.send_message(chat_id=update.message.chat_id,
+                                         text="MariaDB está funcionando!")
+                        return
+                    elif salida.find('dead') > -1:
+                        bot.send_message(chat_id=update.message.chat_id,
+                                         text="MariaDB está parado!")
+                        return
+                bot.send_message(chat_id=update.message.chat_id,
+                                 text="Algo no va bien! MariaDB está parado!")
+            elif selected == 'Apache':
+                salida = run_command('systemctl status apache2')
+                if salida is not None:
+                    if salida.find('running') > -1:
+                        bot.send_message(chat_id=update.message.chat_id,
+                                         text="Apache está funcionando!")
+                        return
+                    elif salida.find('dead') > -1:
+                        bot.send_message(chat_id=update.message.chat_id,
+                                         text="Apache está parado!")
+                        return
+                bot.send_message(chat_id=update.message.chat_id,
+                                 text="Algo no va bien!!! Apache está parado!")
+            elif selected == 'OpenVPN':
+                salida = run_command('systemctl status openvpn')
+                if salida is not None:
+                    if salida.find('Active: active') > -1:
+                        bot.send_message(chat_id=update.message.chat_id,
+                                         text="El VPN está funcionando!")
+                        return
+                    elif salida.find('dead') > -1:
+                        bot.send_message(chat_id=update.message.chat_id,
+                                         text="El VPN está parado!")
+                        return
+                bot.send_message(chat_id=update.message.chat_id,
+                                 text="Algo no va bien!!! El VPN está parado!")
+
         def consejo(bot, update):
             salida = run_command('fortune')
             if salida is not None:
