@@ -3,12 +3,11 @@ data/message_start.service /etc/systemd/system
 data/message_stop.service /etc/systemd/system
 python-telegram-bot/telegram/*.py /usr/share/senderbot/telegram
 python-telegram-bot/telegram/ext/*.py /usr/share/senderbot/telegram/ext
-python-telegram-bot/telegram/utils/*.py /usr/share/senderbot/telegram/utils
-python-telegram-bot/telegram/payment/*.py /usr/share/senderbot/telegram/payment
-python-telegram-bot/telegram/games/*.py /usr/share/senderbot/telegram/games
-python-telegram-bot/telegram/contrib/*.py /usr/share/senderbot/telegram/contrib
 python-telegram-bot/telegram/files/*.py /usr/share/senderbot/telegram/files
+python-telegram-bot/telegram/games/*.py /usr/share/senderbot/telegram/games
 python-telegram-bot/telegram/inline/*.py /usr/share/senderbot/telegram/inline
+python-telegram-bot/telegram/payment/*.py /usr/share/senderbot/telegram/payment
+python-telegram-bot/telegram/utils/*.py /usr/share/senderbot/telegram/utils
 python-telegram-bot/telegram/vendor/*.py /usr/share/senderbot/telegram/vendor
 python-telegram-bot/telegram/vendor/ptb_urllib3/*.py /usr/share/senderbot/telegram/vendor/ptb_urllib3
 python-telegram-bot/telegram/vendor/ptb_urllib3/urllib3/*.py /usr/share/senderbot/telegram/vendor/ptb_urllib3/urllib3

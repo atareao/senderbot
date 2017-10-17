@@ -24,6 +24,7 @@
 from optparse import OptionParser
 from pprint import pprint
 from PIL import Image
+from time import sleep
 import requests
 import base64
 from io import BytesIO
@@ -49,6 +50,12 @@ except Exception as e:
     from telegram.ext import Updater
     from telegram.ext import CommandHandler, ConversationHandler, RegexHandler
     from telegram.ext import CallbackQueryHandler, MessageHandler, Filters
+try:
+    from picamera import PiCamera
+    exits_camera = True
+except Exception as e:
+    print(e)
+    exits_camera = False
 
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - \
@@ -460,6 +467,28 @@ def only():
             bot.send_photo(chat_id=update.message.chat_id,
                            photo=bio)
 
+        def take_photo(bot, update):
+            if exits_camera is True:
+                rasp_photo = BytesIO()
+                rasp_photo.name = 'image.png'
+                try:
+                    camera = PiCamera()
+                    camera.start_preview()
+                    # Camera warm-up time
+                    sleep(2)
+                    camera.capture(rasp_photo, format='png',
+                                   use_video_port=True)
+                except Exception as e:
+                    print(e)
+                finally:
+                    camera.close()
+                rasp_photo.seek(0)
+                bot.send_photo(chat_id=update.message.chat_id,
+                               photo=rasp_photo)
+            else:
+                bot.send_message(chat_id=update.message.chat_id,
+                                 text="O no hay cámara o no la puedo usar!!!")
+
         def tobase64(bot, update):
             photo_file = bot.get_file(update.message.document.file_id)
             response = requests.get(photo_file['file_path'])
@@ -472,6 +501,9 @@ def only():
 
         consejo_handler = CommandHandler('consejo', consejo)
         dispatcher.add_handler(consejo_handler)
+
+        photo_handler = CommandHandler('foto', take_photo)
+        dispatcher.add_handler(photo_handler)
 
         temp_handler = CommandHandler('temp', temp)
         dispatcher.add_handler(temp_handler)

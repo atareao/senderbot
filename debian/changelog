@@ -1,8 +1,8 @@
-senderbot (0.3.3-0extras17.04.3) zesty; urgency=medium
+senderbot (0.3.3-0extras17.04.4) zesty; urgency=medium
 
   * Added OpenVPN status
 
- -- Lorenzo Carbonell <lorenzo.carbonell.cerezo@gmail.com>  Fri, 13 Oct 2017 10:25:51 +0200
+ -- Lorenzo Carbonell <lorenzo.carbonell.cerezo@gmail.com>  Fri, 13 Oct 2017 13:41:25 +0200
 
 senderbot (0.3.2-0extras17.04.0) zesty; urgency=medium
 
