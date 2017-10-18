@@ -392,7 +392,7 @@ def only():
                              text="Algo no va bien!!! El VPN está parado!")
 
         def distro(bot, update):
-            reply_keyboard = [['Trabajo', 'Juegos', 'Normal'],
+            reply_keyboard = [['Trabajo', 'Diversión', 'Normal'],
                               ['Diseño', 'Programación']]
             update.message.reply_text(
                 '¿Que uso le vas a dar a tu distribución?',
@@ -527,9 +527,6 @@ def only():
                 msg,
                 reply_markup=ReplyKeyboardRemove())
             return ConversationHandler.END
-
-
-
 
         def service(bot, update):
             selected = update.message.text
