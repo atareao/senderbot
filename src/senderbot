@@ -75,6 +75,13 @@ PARAMS = {'token': None,
           'channel_id': None}
 
 SERVICE = 1001
+OPCION1 = 2001
+OPCION2 = 2002
+OPCION3 = 2003
+OPCION4 = 2004
+OPCION5 = 2005
+OPCION21 = 20021
+OPCION31 = 20031
 
 if not os.path.exists(CONFIG_APP_DIR):
     os.makedirs(CONFIG_APP_DIR)
@@ -166,7 +173,6 @@ class SenderBot(Bot):
             print(1)
             super(SenderBot, self).sendPhoto(chat_id=self.channel_id,
                                              photo=file_image)
-
 
     def send_audio(self, file_audio):
         if os.path.exists(file_audio):
@@ -385,6 +391,146 @@ def only():
             bot.send_message(chat_id=update.message.chat_id,
                              text="Algo no va bien!!! El VPN está parado!")
 
+        def distro(bot, update):
+            reply_keyboard = [['Trabajo', 'Juegos', 'Normal'],
+                              ['Diseño', 'Programación']]
+            update.message.reply_text(
+                '¿Que uso le vas a dar a tu distribución?',
+                reply_markup=ReplyKeyboardMarkup(reply_keyboard,
+                                                 one_time_keyboard=True))
+            return OPCION1
+
+        def opcion1(bot, update):
+            selected = update.message.text
+            if selected == 'Trabajo':
+                update.message.reply_text(
+                    'Yo probaría una de estas: "OpenSUSE", "Fedora", "Debian"',
+                    reply_markup=ReplyKeyboardRemove())
+                return ConversationHandler.END
+            elif selected == 'Diversión':
+                reply_keyboard = [['Si', 'No']]
+                update.message.reply_text(
+                    '¿Eres un Geek?',
+                    reply_markup=ReplyKeyboardMarkup(reply_keyboard,
+                                                     one_time_keyboard=True))
+                return OPCION2
+            elif selected == 'Normal':
+                reply_keyboard = [['Si', 'No']]
+                update.message.reply_text(
+                    '¿Has utilizado antes una distribución Linux?',
+                    reply_markup=ReplyKeyboardMarkup(reply_keyboard,
+                                                     one_time_keyboard=True))
+                return OPCION3
+            elif selected == 'Diseño':
+                reply_keyboard = [['Windows', 'Mac']]
+                update.message.reply_text(
+                    '¿Que sistema operativo has utilizado antes?',
+                    reply_markup=ReplyKeyboardMarkup(reply_keyboard,
+                                                     one_time_keyboard=True))
+                return OPCION4
+            elif selected == 'Programación':
+                reply_keyboard = [['Rápido y funcionando', 'Configurar mi SO']]
+                update.message.reply_text(
+                    '¿Que prefires?',
+                    reply_markup=ReplyKeyboardMarkup(reply_keyboard,
+                                                     one_time_keyboard=True))
+                return OPCION5
+
+        def opcion2(bot, update):
+            selected = update.message.text
+            if selected == 'Si':
+                reply_keyboard = [['Si', 'No']]
+                update.message.reply_text(
+                    '¿Has probado Arch?',
+                    reply_markup=ReplyKeyboardMarkup(reply_keyboard,
+                                                     one_time_keyboard=True))
+                return OPCION21
+            elif selected == 'No':
+                reply_keyboard = [['Si', 'No']]
+                update.message.reply_text(
+                    '¿Has utilizado antes una distribución Linux?',
+                    reply_markup=ReplyKeyboardMarkup(reply_keyboard,
+                                                     one_time_keyboard=True))
+                return OPCION3
+
+        def opcion21(bot, update):
+            selected = update.message.text
+            if selected == 'Si':
+                msg = 'Yo probaría una de estas: "Arch", "Manjaro", \
+"Antergos", "Apricity OS"'
+            else:
+                msg = 'Yo probaría una de estas: "Gentoo", "CentOS", \
+"Debian", "Slackware"'
+            update.message.reply_text(
+                msg,
+                reply_markup=ReplyKeyboardRemove())
+            return ConversationHandler.END
+
+        def opcion3(bot, update):
+            selected = update.message.text
+            if selected == 'Si':
+                reply_keyboard = [['Ubuntu', 'Linux Mint'],
+                                  ['Manjaro', 'Fedora']]
+                update.message.reply_text(
+                    '¿Que distro probaste antes?',
+                    reply_markup=ReplyKeyboardMarkup(reply_keyboard,
+                                                     one_time_keyboard=True))
+                return OPCION31
+            else:
+                reply_keyboard = [['Windows', 'Mac']]
+                update.message.reply_text(
+                    '¿Que sistema operativo has utilizado antes?',
+                    reply_markup=ReplyKeyboardMarkup(reply_keyboard,
+                                                     one_time_keyboard=True))
+                return OPCION4
+
+        def opcion31(bot, update):
+            selected = update.message.text
+            if selected == 'Ubuntu':
+                msg = 'Yo probaría una de estas: "Linux Mint", "Ubuntu Mate", \
+"Kubuntu", "Elementary OS"'
+            elif selected == 'Linux':
+                msg = 'Yo probaría una de estas: "Ubuntu", "Kubuntu", \
+"Fedora", "Manjaro"'
+            elif selected == 'Manjaro':
+                msg = 'Yo probaría una de estas: "Apricity OS", "Ubuntu", \
+"Antergos", "Fedora"'
+            else:
+                msg = 'Yo probaría una de estas: "Ubuntu", "Ubuntu GNOME", \
+"Kubuntu", "Linux Mint"'
+            update.message.reply_text(
+                msg,
+                reply_markup=ReplyKeyboardRemove())
+            return ConversationHandler.END
+
+        def opcion4(bot, update):
+            selected = update.message.text
+            if selected == 'Windows':
+                msg = 'Yo probaría una de estas: "Kubuntu", "Linux Mint", \
+"Apricity OS"'
+            else:
+                msg = 'Yo probaría una de estas: "Ubuntu", "Elementary OS"'
+            update.message.reply_text(
+                msg,
+                reply_markup=ReplyKeyboardRemove())
+            return ConversationHandler.END
+
+        def opcion5(bot, update):
+            selected = update.message.text
+            if selected == 'Rápido y funcionando':
+                msg = 'Yo probaría una de estas: "Ubuntu", "Linux Mint", \
+"Ubuntu Mate", "OpenSUSE"'
+            else:
+                msg = 'Yo probaría una de estas: "Arch", "Manjaro", \
+"Antergos", "Apricity OS"'
+            update.message.reply_text(
+                msg,
+                reply_markup=ReplyKeyboardRemove())
+            return ConversationHandler.END
+
+
+
+
         def service(bot, update):
             selected = update.message.text
             if selected == 'MariaDB':
@@ -544,6 +690,26 @@ def only():
             fallbacks=[CommandHandler('cancel', cancel)]
         )
         dispatcher.add_handler(conv_handler)
+
+        distro_handler = ConversationHandler(
+            entry_points=[CommandHandler('distro', distro)],
+            states={
+                OPCION1: [RegexHandler(
+                    '^(Trabajo|Diversión|Normal|Diseño|Programación)$',
+                    opcion1)],
+                OPCION2: [RegexHandler('^(Si|No)$', opcion2)],
+                OPCION3: [RegexHandler('^(Si|No)$', opcion3)],
+                OPCION4: [RegexHandler('^(Windows|Mac)$', opcion4)],
+                OPCION5: [RegexHandler('^(Rápido|Configurar)$', opcion5)],
+                OPCION21: [RegexHandler('^(Si|No)$', opcion21)],
+                OPCION31: [RegexHandler('^(Ubuntu|Linux|Manjaro|Fedora)$',
+                           opcion31)],
+
+
+            },
+            fallbacks=[CommandHandler('cancel', cancel)]
+        )
+        dispatcher.add_handler(distro_handler)
 
         echo_handler = MessageHandler(Filters.text, echo)
         dispatcher.add_handler(echo_handler)
