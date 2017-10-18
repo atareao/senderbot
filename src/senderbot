@@ -158,9 +158,15 @@ class SenderBot(Bot):
                                             parse_mode=ParseMode.HTML)
 
     def send_image(self, file_image):
+        print(file_image)
         if os.path.exists(file_image):
             super(SenderBot, self).sendPhoto(chat_id=self.channel_id,
                                              photo=open(file_image, 'rb'))
+        elif file_image.startswith('https') or file_image.startswith('http'):
+            print(1)
+            super(SenderBot, self).sendPhoto(chat_id=self.channel_id,
+                                             photo=file_image)
+
 
     def send_audio(self, file_audio):
         if os.path.exists(file_audio):
@@ -617,3 +623,18 @@ if __name__ == '__main__':
     # Set Token
     if options.token is not None:
         set_token(options.token)
+
+    '''
+    start - Inicio
+    consejo - Dame un consejo
+    foto - Toma una foto del puesto de trabajo
+    temp - Dime la temperatura del procesador
+    samba - Dime si samba está funcionando
+    mariadb - Dime si mariadb está funcionando
+    apache - Dime si apache está funcionando
+    vpn - Dime si la VPN  está funcionando
+    caps - Pasa un texto a mayúsculas
+    stop - Para el bot
+    info1 - Menú de servicios tipo 1
+    info2 - Menú de servicios tipo 2
+    '''
