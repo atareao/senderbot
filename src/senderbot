@@ -436,14 +436,6 @@ def only():
                     reply_markup=ReplyKeyboardMarkup(reply_keyboard,
                                                      one_time_keyboard=True))
                 return OPCION5
-            else:
-                reply_keyboard = [['Trabajo', 'Diversión', 'Normal'],
-                                  ['Diseño', 'Programación']]
-                update.message.reply_text(
-                    '¿Que uso le vas a dar a tu distribución?',
-                    reply_markup=ReplyKeyboardMarkup(reply_keyboard,
-                                                     one_time_keyboard=True))
-                return OPCION1
 
         def opcion2(bot, update):
             selected = update.message.text
@@ -461,13 +453,6 @@ def only():
                     reply_markup=ReplyKeyboardMarkup(reply_keyboard,
                                                      one_time_keyboard=True))
                 return OPCION3
-            else:
-                reply_keyboard = [['Si', 'No']]
-                update.message.reply_text(
-                    '¿Eres un Geek?',
-                    reply_markup=ReplyKeyboardMarkup(reply_keyboard,
-                                                     one_time_keyboard=True))
-                return OPCION2
 
         def opcion21(bot, update):
             selected = update.message.text
