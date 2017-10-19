@@ -75,6 +75,7 @@ PARAMS = {'token': None,
           'channel_id': None}
 
 SERVICE = 1001
+OPCION0 = 2000
 OPCION1 = 2001
 OPCION2 = 2002
 OPCION3 = 2003
@@ -435,6 +436,14 @@ def only():
                     reply_markup=ReplyKeyboardMarkup(reply_keyboard,
                                                      one_time_keyboard=True))
                 return OPCION5
+            else:
+                reply_keyboard = [['Trabajo', 'Diversión', 'Normal'],
+                                  ['Diseño', 'Programación']]
+                update.message.reply_text(
+                    '¿Que uso le vas a dar a tu distribución?',
+                    reply_markup=ReplyKeyboardMarkup(reply_keyboard,
+                                                     one_time_keyboard=True))
+                return OPCION1
 
         def opcion2(bot, update):
             selected = update.message.text
@@ -452,6 +461,13 @@ def only():
                     reply_markup=ReplyKeyboardMarkup(reply_keyboard,
                                                      one_time_keyboard=True))
                 return OPCION3
+            else:
+                reply_keyboard = [['Si', 'No']]
+                update.message.reply_text(
+                    '¿Eres un Geek?',
+                    reply_markup=ReplyKeyboardMarkup(reply_keyboard,
+                                                     one_time_keyboard=True))
+                return OPCION2
 
         def opcion21(bot, update):
             selected = update.message.text
@@ -691,13 +707,15 @@ def only():
         distro_handler = ConversationHandler(
             entry_points=[CommandHandler('distro', distro)],
             states={
+                OPCION0: [CommandHandler('distro', distro)],
                 OPCION1: [RegexHandler(
                     '^(Trabajo|Diversión|Normal|Diseño|Programación)$',
                     opcion1)],
                 OPCION2: [RegexHandler('^(Si|No)$', opcion2)],
                 OPCION3: [RegexHandler('^(Si|No)$', opcion3)],
                 OPCION4: [RegexHandler('^(Windows|Mac)$', opcion4)],
-                OPCION5: [RegexHandler('^(Rápido y funcionando|Configurar)$', opcion5)],
+                OPCION5: [RegexHandler(
+                    '^(Rápido y funcionando|Configurar mi SO)$', opcion5)],
                 OPCION21: [RegexHandler('^(Si|No)$', opcion21)],
                 OPCION31: [RegexHandler('^(Ubuntu|Linux|Manjaro|Fedora)$',
                            opcion31)],
