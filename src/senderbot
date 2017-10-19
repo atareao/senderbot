@@ -697,7 +697,7 @@ def only():
                 OPCION2: [RegexHandler('^(Si|No)$', opcion2)],
                 OPCION3: [RegexHandler('^(Si|No)$', opcion3)],
                 OPCION4: [RegexHandler('^(Windows|Mac)$', opcion4)],
-                OPCION5: [RegexHandler('^(Rápido|Configurar)$', opcion5)],
+                OPCION5: [RegexHandler('^(Rápido y funcionando|Configurar)$', opcion5)],
                 OPCION21: [RegexHandler('^(Si|No)$', opcion21)],
                 OPCION31: [RegexHandler('^(Ubuntu|Linux|Manjaro|Fedora)$',
                            opcion31)],
