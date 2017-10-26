@@ -656,13 +656,13 @@ def only():
             if not query:
                 return
             rae = DLE()
+            ans = rae.exact(query)
             results = list()
             results.append(
                 InlineQueryResultArticle(
-                    id=query.upper(),
+                    id=ans,
                     title='Caps',
-                    input_message_content=InputTextMessageContent(
-                       rae.extact(query))
+                    input_message_content=InputTextMessageContent(ans)
                 )
             )
             bot.answer_inline_query(update.inline_query.id, results)
