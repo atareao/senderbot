@@ -35,7 +35,6 @@ import sys
 import json
 import subprocess
 import shlex
-import hashlib
 from rae import DLE
 try:
     from telegram import Bot, ParseMode
@@ -92,12 +91,6 @@ OPCION31 = 20031
 
 if not os.path.exists(CONFIG_APP_DIR):
     os.makedirs(CONFIG_APP_DIR)
-
-
-def sha1(text):
-    m = hashlib.sha1()
-    m.update(text.encode())
-    return m.hexdigest()
 
 
 def run_command(command):
@@ -664,12 +657,11 @@ def only():
                 return
             rae = DLE()
             ans = rae.exact(query)
-            mid = sha1(ans)
-            print(mid, '===', query, '== ==', ans, '===')
+            print('===', query, '== ==', ans, '===')
             results = list()
             results.append(
                 InlineQueryResultArticle(
-                    id=mid,
+                    id=query,
                     title='Caps',
                     input_message_content=InputTextMessageContent(ans)
                 )
