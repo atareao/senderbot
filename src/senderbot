@@ -43,7 +43,7 @@ try:
     from telegram.ext import CommandHandler, ConversationHandler, RegexHandler
     from telegram.ext import CallbackQueryHandler, MessageHandler, Filters
     from telegram import InlineQueryResultArticle, InputTextMessageContent
-    from telegram import InlineQueryHandler
+    from telegram.ext import InlineQueryHandler
 except Exception as e:
     sys.path.insert(1, '/usr/share/senderbot/')
     from telegram import Bot, ParseMode
@@ -53,7 +53,7 @@ except Exception as e:
     from telegram.ext import CommandHandler, ConversationHandler, RegexHandler
     from telegram.ext import CallbackQueryHandler, MessageHandler, Filters
     from telegram import InlineQueryResultArticle, InputTextMessageContent
-    from telegram import InlineQueryHandler
+    from telegram.ext import InlineQueryHandler
 try:
     from picamera import PiCamera
     exits_camera = True
