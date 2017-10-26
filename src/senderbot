@@ -35,6 +35,7 @@ import sys
 import json
 import subprocess
 import shlex
+from rae impor DLE
 try:
     from telegram import Bot, ParseMode
     from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
@@ -650,29 +651,24 @@ def only():
             bot.send_message(chat_id=update.message.chat_id,
                              text=encoded_string)
 
-        def inline_caps(bot, update):
+        def inline_raw(bot, update):
             query = update.inline_query.query
             if not query:
                 return
+            rae = DLE()
             results = list()
             results.append(
                 InlineQueryResultArticle(
                     id=query.upper(),
-                    title='Mayúsculas',
+                    title='Caps',
                     input_message_content=InputTextMessageContent(
-                        query.upper())
-                ),
-                InlineQueryResultArticle(
-                    id=query.upper(),
-                    title='Minúsculas',
-                    input_message_content=InputTextMessageContent(
-                        query.lower())
+                       rae.extact(query))
                 )
             )
             bot.answer_inline_query(update.inline_query.id, results)
 
-        inline_caps_handler = InlineQueryHandler(inline_caps)
-        dispatcher.add_handler(inline_caps_handler)
+        inline_rae_handler = InlineQueryHandler(inline_rae)
+        dispatcher.add_handler(inline_rae_handler)
 
         start_handler = CommandHandler('start', start)
         dispatcher.add_handler(start_handler)
