@@ -14,6 +14,7 @@ Depends: ${misc:Depends}, ${python:Depends},
 	python3-pil,
 	python3-future,
 	python3-certifi,
+	python3-lxml,
 	fortune-mod,
 	fortunes-es
 Description: A bot to sender messages to Channel o Group

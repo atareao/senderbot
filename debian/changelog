@@ -1,3 +1,9 @@
+senderbot (0.4.0-0extras17.10.0) artful; urgency=medium
+
+  * Inline bot
+
+ -- Lorenzo Carbonell <lorenzo.carbonell.cerezo@gmail.com>  Thu, 26 Oct 2017 13:46:51 +0200
+
 senderbot (0.3.4-0extras17.04.0) zesty; urgency=medium
 
   * Picamera
