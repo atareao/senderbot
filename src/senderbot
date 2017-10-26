@@ -42,6 +42,8 @@ try:
     from telegram.ext import Updater
     from telegram.ext import CommandHandler, ConversationHandler, RegexHandler
     from telegram.ext import CallbackQueryHandler, MessageHandler, Filters
+    from telegram import InlineQueryResultArticle, InputTextMessageContent
+    from telegram import InlineQueryHandler
 except Exception as e:
     sys.path.insert(1, '/usr/share/senderbot/')
     from telegram import Bot, ParseMode
@@ -50,6 +52,8 @@ except Exception as e:
     from telegram.ext import Updater
     from telegram.ext import CommandHandler, ConversationHandler, RegexHandler
     from telegram.ext import CallbackQueryHandler, MessageHandler, Filters
+    from telegram import InlineQueryResultArticle, InputTextMessageContent
+    from telegram import InlineQueryHandler
 try:
     from picamera import PiCamera
     exits_camera = True
@@ -253,7 +257,7 @@ class InteractiveBot():
         else:
             self.updater = None
 
-
+            
 def only():
     configuration = Configuration()
     token = configuration.get('token')
@@ -646,6 +650,24 @@ def only():
             bot.send_message(chat_id=update.message.chat_id,
                              text=encoded_string)
 
+        def inline_caps(bot, update):
+            query = update.inline_query.query
+            if not query:
+                return
+            results = list()
+            results.append(
+                InlineQueryResultArticle(
+                    id=query.upper(),
+                    title='Caps',
+                    input_message_content=InputTextMessageContent(
+                        query.upper())
+                )
+            )
+            bot.answer_inline_query(update.inline_query.id, results)
+
+        inline_caps_handler = InlineQueryHandler(inline_caps)
+        dispatcher.add_handler(inline_caps_handler)
+
         start_handler = CommandHandler('start', start)
         dispatcher.add_handler(start_handler)
 
@@ -692,7 +714,6 @@ def only():
         distro_handler = ConversationHandler(
             entry_points=[CommandHandler('distro', distro)],
             states={
-                OPCION0: [CommandHandler('distro', distro)],
                 OPCION1: [RegexHandler(
                     '^(Trabajo|Diversión|Normal|Diseño|Programación)$',
                     opcion1)],
@@ -704,8 +725,6 @@ def only():
                 OPCION21: [RegexHandler('^(Si|No)$', opcion21)],
                 OPCION31: [RegexHandler('^(Ubuntu|Linux|Manjaro|Fedora)$',
                            opcion31)],
-
-
             },
             fallbacks=[CommandHandler('cancel', cancel)]
         )
