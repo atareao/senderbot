@@ -651,7 +651,7 @@ def only():
             bot.send_message(chat_id=update.message.chat_id,
                              text=encoded_string)
 
-        def inline_raw(bot, update):
+        def inline_rae(bot, update):
             query = update.inline_query.query
             if not query:
                 return
