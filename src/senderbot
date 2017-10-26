@@ -101,14 +101,15 @@ def definition(word):
         doc = lh.document_fromstring(clean_html(response.text))
         trans = doc.find_class('trans')
         if len(trans) > 0:
-            trans_tmp = ''
+            results = list()
             for t in trans:
-                trans_tmp = trans_tmp + lh.tostring(t,
-                                                    method='text',
-                                                    encoding='utf-8').decode()
-                trans_tmp = trans_tmp.replace('.  ', '.\n')
-                trans_tmp = trans_tmp.replace('. ', '.\n')
-            return trans_tmp
+                result = lh.tostring(t,
+                                     method='text',
+                                     encoding='utf-8').decode()
+                result = result.replace('.  ', '.\n')
+                result = result.replace('. ', '.\n')
+                results.append(result)
+            return results
     return None
 
 
@@ -675,14 +676,14 @@ def only():
             if not query:
                 return
             results = list()
-            results.append(
-                InlineQueryResultArticle(
-                    id=query,
-                    title='Significado en WordReference',
-                    input_message_content=InputTextMessageContent(
-                        definition(query))
+            for result in definition(query):
+                results.append(
+                    InlineQueryResultArticle(
+                        id=query,
+                        title='Significado en WordReference',
+                        description=result,
+                        input_message_content=InputTextMessageContent(result))
                 )
-            )
             bot.answer_inline_query(update.inline_query.id, results)
 
         inline_wordreference_handler = InlineQueryHandler(inline_wordreference)
