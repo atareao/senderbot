@@ -660,13 +660,14 @@ def only():
             print('===', query, '== ==', ans, '===')
             results = list()
             for index, an in enumerate(ans):
-                results.append(
-                    InlineQueryResultArticle(
-                        id=query,
-                        title='Significado %s' % index,
-                        input_message_content=InputTextMessageContent(an)
+                if an is not None:
+                    results.append(
+                        InlineQueryResultArticle(
+                            id=query,
+                            title='Significado %s' % index,
+                            input_message_content=InputTextMessageContent(an)
+                        )
                     )
-                )
             bot.answer_inline_query(update.inline_query.id, results)
 
         inline_rae_handler = InlineQueryHandler(inline_rae)
