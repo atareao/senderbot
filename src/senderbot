@@ -35,7 +35,7 @@ import sys
 import json
 import subprocess
 import shlex
-from rae impor DLE
+from rae import DLE
 try:
     from telegram import Bot, ParseMode
     from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
