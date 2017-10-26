@@ -657,11 +657,11 @@ def only():
                 return
             rae = DLE()
             ans = rae.exact(query)
-            print(query, ans)
+            print('===', query, '== ==', ans, '===')
             results = list()
             results.append(
                 InlineQueryResultArticle(
-                    id=ans,
+                    id=query,
                     title='Caps',
                     input_message_content=InputTextMessageContent(ans)
                 )
