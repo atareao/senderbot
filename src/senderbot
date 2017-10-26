@@ -656,7 +656,7 @@ def only():
             if not query:
                 return
             rae = DLE()
-            ans = rae.exact(query)
+            ans = rae.exact(query)[0]
             print('===', query, '== ==', ans, '===')
             results = list()
             results.append(
