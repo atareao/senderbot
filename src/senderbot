@@ -659,13 +659,14 @@ def only():
             ans = rae.exact(query)[0]
             print('===', query, '== ==', ans, '===')
             results = list()
-            results.append(
-                InlineQueryResultArticle(
-                    id=query,
-                    title='Caps',
-                    input_message_content=InputTextMessageContent(ans)
+            for index, an in enumerate(ans):
+                results.append(
+                    InlineQueryResultArticle(
+                        id=query,
+                        title='Significado %s' % index,
+                        input_message_content=InputTextMessageContent(an)
+                    )
                 )
-            )
             bot.answer_inline_query(update.inline_query.id, results)
 
         inline_rae_handler = InlineQueryHandler(inline_rae)
