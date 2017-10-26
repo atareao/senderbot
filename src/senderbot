@@ -257,7 +257,7 @@ class InteractiveBot():
         else:
             self.updater = None
 
-            
+
 def only():
     configuration = Configuration()
     token = configuration.get('token')
@@ -658,9 +658,15 @@ def only():
             results.append(
                 InlineQueryResultArticle(
                     id=query.upper(),
-                    title='Caps',
+                    title='Mayúsculas',
                     input_message_content=InputTextMessageContent(
                         query.upper())
+                ),
+                InlineQueryResultArticle(
+                    id=query.upper(),
+                    title='Minúsculas',
+                    input_message_content=InputTextMessageContent(
+                        query.lower())
                 )
             )
             bot.answer_inline_query(update.inline_query.id, results)
