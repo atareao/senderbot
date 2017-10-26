@@ -678,7 +678,7 @@ def only():
             results.append(
                 InlineQueryResultArticle(
                     id=query,
-                    title='Significado RAE',
+                    title='Significado en WordReference',
                     input_message_content=InputTextMessageContent(
                         definition(query))
                 )
