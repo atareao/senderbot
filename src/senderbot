@@ -35,7 +35,8 @@ import sys
 import json
 import subprocess
 import shlex
-from rae import DLE
+import lxml.html as lh
+from lxml.html.clean import clean_html
 try:
     from telegram import Bot, ParseMode
     from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
@@ -91,6 +92,24 @@ OPCION31 = 20031
 
 if not os.path.exists(CONFIG_APP_DIR):
     os.makedirs(CONFIG_APP_DIR)
+
+
+def definition(word):
+    url = 'http://www.wordreference.com/definicion/%s' % (word)
+    response = requests.get(url)
+    if response.status_code == 200:
+        doc = lh.document_fromstring(clean_html(response.text))
+        trans = doc.find_class('trans')
+        if len(trans) > 0:
+            trans_tmp = ''
+            for t in trans:
+                trans_tmp = trans_tmp + lh.tostring(t,
+                                                    method='text',
+                                                    encoding='utf-8').decode()
+                trans_tmp = trans_tmp.replace('.  ', '.\n')
+                trans_tmp = trans_tmp.replace('. ', '.\n')
+            return trans_tmp
+    return None
 
 
 def run_command(command):
@@ -651,25 +670,23 @@ def only():
             bot.send_message(chat_id=update.message.chat_id,
                              text=encoded_string)
 
-        def inline_rae(bot, update):
+        def inline_wordreference(bot, update):
             query = update.inline_query.query
             if not query:
                 return
-            rae = DLE()
-            ans = rae.exact(query)[0]
-            print('===', query, '== ==', ans, '===')
             results = list()
             results.append(
                 InlineQueryResultArticle(
                     id=query,
                     title='Significado RAE',
-                    input_message_content=InputTextMessageContent(ans)
+                    input_message_content=InputTextMessageContent(
+                        definition(query))
                 )
             )
             bot.answer_inline_query(update.inline_query.id, results)
 
-        inline_rae_handler = InlineQueryHandler(inline_rae)
-        dispatcher.add_handler(inline_rae_handler)
+        inline_wordreference_handler = InlineQueryHandler(inline_wordreference)
+        dispatcher.add_handler(inline_wordreference_handler)
 
         start_handler = CommandHandler('start', start)
         dispatcher.add_handler(start_handler)
